@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeSolver
 {
@@ -17,8 +15,33 @@ namespace MazeSolver
     /// </summary>
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
+            //read in the file from args
+            string line;
+            var file = new StreamReader(args[0]);
+            while ((line = file.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+                
+            }
+            Console.ReadLine();
+            file.Close();
+            
+            SolveMaze();
+        }
+
+        public static void SolveMaze()
+        {
+            //read & get & save list of nodes ... split based off comma
+            //read & get & save the beginning and end of maze ... split based off comma
+
+            /*create dictionary based off of what a given node is connected to
+            by reading the next lines until a blank new line is detected.
+            */
+
+
+
 
         }
     }
