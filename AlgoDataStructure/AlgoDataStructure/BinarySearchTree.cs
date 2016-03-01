@@ -136,7 +136,7 @@ namespace AlgoDataStructure
             Node<T> current = _root;
 
 
-            while (notVisited)
+            while (current != null)
             {
                 Console.WriteLine("this is the current: " + current.Data  + " /"+ current.LeftChild.Data + " left child" + " /" + current.RightChild.Data + " rightchild");
                 if (current.LeftChild != null)
@@ -144,20 +144,15 @@ namespace AlgoDataStructure
                     leftLst.Add(current.LeftChild.Data);
                     current = current.LeftChild;
                 }
-                else
-                {
-                    notVisited = false;
-                }
+               
                 if (current.RightChild != null)
                 {
                     rightLst.Add(current.RightChild.Data);
                     current = current.LeftChild;
                 }
-                else
-                {
-                    notVisited = false;
-                }
 
+
+               
             }
 
             left = LeftPrinting(leftLst, left);
@@ -168,6 +163,8 @@ namespace AlgoDataStructure
             return output;
 
         }
+
+
 
         private static string RightPrinting(List<T> rightLst, string right)
         {
