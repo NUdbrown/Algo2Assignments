@@ -49,7 +49,7 @@ namespace AlgoDataStructure
                             current = current.RightChild;
                         }
                     }
-                    else if(value.CompareTo(current.Data) < 0)
+                    else if (value.CompareTo(current.Data) < 0)
                     {
                         if (current.LeftChild == null)
                         {
@@ -123,77 +123,74 @@ namespace AlgoDataStructure
         {
 
             string output = "";
-            string right = "";
-            string left = "";
-            bool notVisited = true;
-            List<T> leftLst = new List<T>();
-            List<T> rightLst = new List<T>();
+
+            output = "[" + InorderTraversal(_root);
+
+            
+
+            return output.Remove(output.Length - 2) + "]" ;
+
+        }
 
 
-            var temp = new Node<T>(_root.Data);
+        private string InorderTraversal(Node<T> node)
+        {
+            string returnThis = "";
 
-
-            Node<T> current = _root;
-
-
-            while (current != null)
+            if (node == null)
             {
-                Console.WriteLine("this is the current: " + current.Data  + " /"+ current.LeftChild.Data + " left child" + " /" + current.RightChild.Data + " rightchild");
-                if (current.LeftChild != null)
-                {
-                    leftLst.Add(current.LeftChild.Data);
-                    current = current.LeftChild;
-                }
-               
-                if (current.RightChild != null)
-                {
-                    rightLst.Add(current.RightChild.Data);
-                    current = current.LeftChild;
-                }
-
-
-               
+                return returnThis;
             }
 
-            left = LeftPrinting(leftLst, left);
+            if (node.LeftChild != null)
+            {
+                returnThis += InorderTraversal(node.LeftChild);
+            }
 
-            right = RightPrinting(rightLst, right);
+            returnThis += node.Data + ", ";
 
-            output = "["+ left + temp.Data + right + "]";
-            return output;
+            if (node.RightChild != null)
+            {
+                returnThis += InorderTraversal(node.RightChild);
+            }
+
+            return returnThis;
 
         }
 
-
-
-        private static string RightPrinting(List<T> rightLst, string right)
-        {
-            right = rightLst.Aggregate(right, (current, item) => current + (", " + item));
-            Console.WriteLine("This is the right: " + right);
-            return right;
-        }
-
-        private static string LeftPrinting(List<T> leftLst, string left)
-        {
-            left = leftLst.Aggregate(left, (current, item) => current + (item + ", "));
-            Console.WriteLine("This is the left: " + left);
-            return left;
-        }
 
         //returns a pre-order string representation of all the values in the BST [Parent, Left, then Right]
         public string Preorder()
         {
-            Node<T> current = _root;
-            string _out = "";
+            string output = "";
 
-            //while (current != null)
-            //{
+            output = "[" + _root.Data +  PreTraversal(_root) + "]";
+            
+            return output;
+        }
+
+        private string PreTraversal(Node<T> node)
+        {
+            string returnThis = "";
+
+            if (node == null)
+            {
+                return returnThis;
+            }
+
+            if (node.LeftChild != null)
+            {
+                returnThis += PreTraversal(node.LeftChild);
+            }
+
+            if (node.RightChild != null)
+            {
+                returnThis += PreTraversal(node.RightChild);
+            }
 
 
+            return returnThis;
 
-            //}
-
-            return _out;
         }
 
         //returns a post-order string representation of all the values in the BST [Left, Right, then Parent]

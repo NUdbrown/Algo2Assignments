@@ -39,7 +39,9 @@ namespace AlgoTest
             Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
             //Console.WriteLine();
-            //wrong
+            Console.WriteLine();
+            Console.WriteLine("\nPreorder:" + bst.Preorder());
+
             //Console.WriteLine("toArray" + bst.ToArray());
             Console.ReadLine();
 
