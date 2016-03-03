@@ -38,11 +38,18 @@ namespace AlgoTest
             //Console.WriteLine("contains: " + bst.Contains(0));
             Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
-            //Console.WriteLine();
+            
             Console.WriteLine();
             Console.WriteLine("\nPreorder:" + bst.Preorder());
 
-            //Console.WriteLine("toArray" + bst.ToArray());
+            Console.WriteLine();
+            Console.WriteLine("\nPostorder:" + bst.Postorder());
+
+            foreach (var item in bst.ToArray())
+            {
+                Console.WriteLine(item);
+            }
+
             Console.ReadLine();
 
 

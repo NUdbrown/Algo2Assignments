@@ -126,8 +126,6 @@ namespace AlgoDataStructure
 
             output = "[" + InorderTraversal(_root);
 
-            
-
             return output.Remove(output.Length - 2) + "]" ;
 
         }
@@ -164,28 +162,26 @@ namespace AlgoDataStructure
         {
             string output = "";
 
-            output = "[" + _root.Data +  PreTraversal(_root) + "]";
+            output = "[" + PreTraversal(_root);
             
-            return output;
+            return output.Remove(output.Length - 2) + "]";
         }
 
         private string PreTraversal(Node<T> node)
         {
             string returnThis = "";
 
-            if (node == null)
-            {
-                return returnThis;
-            }
+            returnThis += node.Data + ", ";
 
             if (node.LeftChild != null)
             {
                 returnThis += PreTraversal(node.LeftChild);
             }
 
+
             if (node.RightChild != null)
             {
-                returnThis += PreTraversal(node.RightChild);
+                returnThis +=  PreTraversal(node.RightChild);
             }
 
 
@@ -196,18 +192,34 @@ namespace AlgoDataStructure
         //returns a post-order string representation of all the values in the BST [Left, Right, then Parent]
         public string Postorder()
         {
-            Node<T> current = _root;
-            string _out = "";
+            string output = "";
 
-            //while (current != null)
-            //{
+            output = "[" + PostTraversal(_root); 
 
-
-
-            //}
-
-            return _out;
+            return output.Remove(output.Length - 2) + "]";
         }
+
+        private string PostTraversal(Node<T> node)
+        {
+            string returnThis = "";
+
+
+            if (node.LeftChild != null)
+            {
+                returnThis += PostTraversal(node.LeftChild);
+            }
+            
+            if (node.RightChild != null)
+            {
+                returnThis += PostTraversal(node.RightChild);
+            }
+
+            returnThis += node.Data + ", ";
+
+            return returnThis;
+
+        }
+
         //---------------------------------------------------------------------------------------------------
 
 
@@ -245,8 +257,8 @@ namespace AlgoDataStructure
         //returns an Array representation of the values in the BST using in-order traversal.
         public T[] ToArray()
         {
-            Inorder();
-            return _tree.ToArray();
+            _tree.Sort();
+            return _tree.ToArray() ;
         }
 
         //public class AVLTree
