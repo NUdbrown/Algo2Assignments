@@ -124,9 +124,9 @@ namespace AlgoDataStructure
 
             string output = "";
 
-            output = "[" + InorderTraversal(_root);
+            output = InorderTraversal(_root);
 
-            return output.Remove(output.Length - 2) + "]" ;
+            return output.Remove(output.Length - 2);
 
         }
 
@@ -162,9 +162,9 @@ namespace AlgoDataStructure
         {
             string output = "";
 
-            output = "[" + PreTraversal(_root);
+            output = PreTraversal(_root);
             
-            return output.Remove(output.Length - 2) + "]";
+            return output.Remove(output.Length - 2);
         }
 
         private string PreTraversal(Node<T> node)
@@ -194,9 +194,9 @@ namespace AlgoDataStructure
         {
             string output = "";
 
-            output = "[" + PostTraversal(_root); 
+            output = PostTraversal(_root); 
 
-            return output.Remove(output.Length - 2) + "]";
+            return output.Remove(output.Length - 2);
         }
 
         private string PostTraversal(Node<T> node)
