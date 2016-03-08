@@ -96,13 +96,131 @@ namespace AlgoDataStructure
         /*removes the specified value from the tree if it is present, or does nothing if the value is not present.
         If the value appears more than once, only the first occurrence of the value is removed.
         The one closests to the root. The next inorder value should take the place of the removed value.*/
-        public void Remove(T value)
+        public bool Remove(T value)
         {
+            
+            Node<T> target = null;
+            
+            Node<T> parent = null;
+            
+            Node<T> current = _root;
 
+            while (current != null)
+            {
+                if (value.CompareTo(current.Data) == 0) 
+                {
+                    target = current;
+                    break;
+                }
+                else if (value.CompareTo(current.Data) > 0) 
+                {
+                    parent = current;
+                    current = current.RightChild;
+                }
+                else 
+                {
+                    parent = current;
+                    current = current.LeftChild;
+                }
+            }
 
+            if (target == null)
+            {
+                return false;
+            }
 
+            bool isLeft = (target == parent.LeftChild);
+
+            if (target == _root) 
+            {
+                current = getLastHouseOnTheLeft(parent.RightChild);
+                if (current != null)
+                {
+                    current.LeftChild = parent.LeftChild;
+                    current.RightChild = parent.RightChild;
+                    _root = current;
+                }
+            }
+            else if (target.IsLeaf())
+            {
+                if (isLeft)
+                {
+                    parent.LeftChild = null;
+                }
+                else
+                {
+                    parent.RightChild = null;
+                }
+            }
+            else if (target.LeftChild != null && target.RightChild != null) //two children
+            {
+                if (isLeft)
+                {
+                    parent.LeftChild = target.RightChild;
+                    parent.LeftChild.LeftChild = target.LeftChild;
+                }
+                else
+                {
+                    parent.RightChild = target.RightChild;
+                    parent.RightChild.LeftChild = target.LeftChild;
+                }
+            }
+            else    //one child 
+            {
+                if (target.LeftChild == null)
+                {
+                    if (isLeft)
+                    {
+                        parent.LeftChild = target.LeftChild;
+                    }
+                    else
+                    {
+                        parent.RightChild = target.LeftChild ;
+                    }
+                }
+                else
+                {
+                    if (isLeft)
+                    {
+                        parent.LeftChild = target.LeftChild;
+                    }
+                    else
+                    {
+                        parent.RightChild = target.RightChild;
+                    }
+                }
+            }
+
+            _tree.Remove(value);
             _count--;
+            return true;
         }
+
+        private Node<T> getLastHouseOnTheLeft(Node<T> start)
+        {
+            Node<T> candidate = null;
+            Node<T> parent = null;
+            Node<T> node = start;
+
+            while (node != null)
+            {
+                if (node.LeftChild != null)
+                {
+                    parent = node;
+                    candidate = node.LeftChild;
+                }
+
+                node = node.LeftChild;
+            }
+
+            if (parent != null)
+            {
+                parent.LeftChild = null;
+            }
+
+            return candidate;
+        }
+
 
         //removes all values from the tree
         public void Clear()
@@ -163,7 +281,7 @@ namespace AlgoDataStructure
             string output = "";
 
             output = PreTraversal(_root);
-            
+
             return output.Remove(output.Length - 2);
         }
 
@@ -181,7 +299,7 @@ namespace AlgoDataStructure
 
             if (node.RightChild != null)
             {
-                returnThis +=  PreTraversal(node.RightChild);
+                returnThis += PreTraversal(node.RightChild);
             }
 
 
@@ -194,7 +312,7 @@ namespace AlgoDataStructure
         {
             string output = "";
 
-            output = PostTraversal(_root); 
+            output = PostTraversal(_root);
 
             return output.Remove(output.Length - 2);
         }
@@ -208,7 +326,7 @@ namespace AlgoDataStructure
             {
                 returnThis += PostTraversal(node.LeftChild);
             }
-            
+
             if (node.RightChild != null)
             {
                 returnThis += PostTraversal(node.RightChild);
@@ -258,7 +376,7 @@ namespace AlgoDataStructure
         public T[] ToArray()
         {
             _tree.Sort();
-            return _tree.ToArray() ;
+            return _tree.ToArray();
         }
 
         //public class AVLTree

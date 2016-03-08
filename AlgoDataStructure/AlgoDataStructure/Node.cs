@@ -78,5 +78,10 @@ namespace AlgoDataStructure
             }
             return false;
         }
+
+        public bool IsLeaf()
+        {
+            return (LeftChild == null && RightChild == null);
+        }
     }
 }
