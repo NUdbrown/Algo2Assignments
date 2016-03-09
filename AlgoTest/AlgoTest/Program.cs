@@ -40,7 +40,13 @@ namespace AlgoTest
             Console.WriteLine("\nInorder:" + bst.Inorder());
 
             Console.WriteLine();
-            Console.WriteLine("\nRemove: I'm removing 5 : " + bst.Remove(5));
+            Console.WriteLine("\nRemove: I'm removing 90 : " + bst.Remove(90));
+
+            Console.WriteLine();
+            Console.WriteLine("\nInorder:" + bst.Inorder());
+
+            Console.WriteLine("Count:" + bst.Count());
+            Console.WriteLine();
 
             //Console.WriteLine();
             //Console.WriteLine("\nPreorder:" + bst.Preorder());

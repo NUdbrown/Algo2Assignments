@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -129,11 +130,11 @@ namespace AlgoDataStructure
                 return false;
             }
 
-            bool isLeft = (target == parent.LeftChild);
+           bool isLeft = target == parent.LeftChild;
 
             if (target == _root) 
             {
-                current = getLastHouseOnTheLeft(parent.RightChild);
+                current = FindLastLeftNode(parent.RightChild);
                 if (current != null)
                 {
                     current.LeftChild = parent.LeftChild;
@@ -157,12 +158,12 @@ namespace AlgoDataStructure
                 if (isLeft)
                 {
                     parent.LeftChild = target.RightChild;
-                    parent.LeftChild.LeftChild = target.LeftChild;
+                    parent.LeftChild = target.LeftChild;
                 }
                 else
                 {
                     parent.RightChild = target.RightChild;
-                    parent.RightChild.LeftChild = target.LeftChild;
+                    parent.RightChild = target.LeftChild;
                 }
             }
             else    //one child 
@@ -196,7 +197,7 @@ namespace AlgoDataStructure
             return true;
         }
 
-        private Node<T> getLastHouseOnTheLeft(Node<T> start)
+        private static Node<T> FindLastLeftNode(Node<T> start)
         {
             Node<T> candidate = null;
             Node<T> parent = null;
