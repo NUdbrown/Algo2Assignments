@@ -48,6 +48,14 @@ namespace MaxHeap
 
             return base.ToString();
         }
-        
+
+        /**Using heapsort, produce and return an array of PQNode instances sorted in non-decreasing order of priority.
+           Despite the typical convention of ignoring index 0 of the backing array, the array you return from this method 
+           should start at 0 and continue to index n-1 (like a typical array in Java or C#)     
+         **/
+         public T[] ToSortedArray()
+        {
+            return null;
+        }
     }
 }
