@@ -26,15 +26,22 @@ namespace MazeSolver
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
             {
                 string line;
-                while ((line = streamReader.ReadLine()) != null)
+                
+                while (fileStream.CanRead)
                 {
+
+                    line = streamReader.ReadLine();
                     list.Add(line);
+                    if (line == String.Empty)
+                    {
+                        list.Remove(list[list.Count - 1]);
+                    }
                 }
             }
-            var lines = list.ToArray();
 
-            var p = new Program();
-            p.SolveMaze(lines);
+            var lines = list.ToArray();
+            
+            SolveMaze(lines);
         }
 
         //read & get & save list of nodes ... split based off comma
@@ -44,42 +51,71 @@ namespace MazeSolver
         by reading the next lines until a blank new line is detected.
         */
 
+        /**
+        1. start at the starting node
+        2. compare it to the connections of the next node.
+        3. if same then current val go to next value
+        4. add new value if not the same
+        5. print list 
+        **/
+        public static string SolveMaze(string[] lines)
+        {
+            var keepTrack = SeparationOfConnections(lines);
+            string[] beginend = lines[1].Split(',');
+            var start = beginend.ElementAt(0);
+            var end = beginend.ElementAt(1);
+            var output = new List<string>();
+            bool foundPath = false;
 
-        public void SolveMaze(string[] lines)
+            while (!foundPath)
+            {
+                output.Add(start);
+                for (int i = 0; i <= keepTrack.Count - 1; i++)
+                {
+                    
+                }
+            }
+
+            return PrintOut(output) + end;
+        }
+
+        private static string PrintOut(List<string> outputs)
+        {
+            return outputs.Aggregate("", (current, item) => current + item);
+        }
+
+        //separates the connections
+        private static Dictionary<string, List<string>> SeparationOfConnections(string[] lines)
         {
             var keepTrack = new Dictionary<string, List<string>>();
             string[] keys = lines[0].Split(',');
-            string[] beginend = lines[1].Split(',');
-            string[] commands;
-            var connects = new List<string>();
-            
-            var start = beginend.ElementAt(0);
-            var end = beginend.ElementAt(1);
-
+            string[] connections = new string[] { };
 
             for (var i = 2; i < lines.Length; i++)
             {
                 //take a first letter because its the key, save the other letters
-                commands = lines[i].Split(',');
-                var letterToRemove = commands.ElementAt(0);
-                commands = commands.Where(val => val != letterToRemove).ToArray();
-                connects.AddRange(commands);
-  
-                //add those letters to their matching key
-                
-                for (int j = 0; j <= keys.Length-1; j++)
+                connections = lines[i].Split(',');
+
+                var letterToRemove = connections.ElementAt(0);
+                Console.WriteLine("\nLetter Removed: " + letterToRemove);
+
+                connections = connections.Where(val => val != letterToRemove).ToArray();
+
+                foreach (var command in connections)
                 {
-                    keepTrack.Add(keys.ElementAt(j), connects);
+                    Console.WriteLine(command);
                 }
-                    //testing purposes
-                    foreach (var reveal in keepTrack)
-                    {
-                        Console.WriteLine(reveal.Key + ": " + reveal.Value);
-                    }
             }
 
-            Console.Read();
-            
+            //add those letters to their matching key
+            for (int j = 0; j <= keys.Length - 1; j++)
+            {
+                keepTrack.Add(keys.ElementAt(j), connections.ToList());
+            }
+
+            Console.ReadLine();
+            //return the connections
+            return keepTrack;
         }
     }
 }

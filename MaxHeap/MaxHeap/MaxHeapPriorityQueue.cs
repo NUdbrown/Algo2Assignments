@@ -9,7 +9,7 @@ namespace MaxHeap
 {
     public class MaxHeapPriorityQueue<T> where T : IComparable<T>
     {
-        PQNode<T> _root = new PQNode<T>();
+        private PQNode<T> _root;
         private int _count = 0;
 
         /** Takes in the priority and value as parameters.Creates a new PQNode with this data and adds the node to the queue,       

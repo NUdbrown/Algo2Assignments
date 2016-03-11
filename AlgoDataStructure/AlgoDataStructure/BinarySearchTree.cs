@@ -243,6 +243,11 @@ namespace AlgoDataStructure
 
             string output = "";
 
+            if (_root == null)
+            {
+                return output;
+            }
+
             output = InorderTraversal(_root);
 
             return output.Remove(output.Length - 2);
@@ -254,11 +259,7 @@ namespace AlgoDataStructure
         {
             string returnThis = "";
 
-            if (node == null)
-            {
-                return returnThis;
-            }
-
+            
             if (node.LeftChild != null)
             {
                 returnThis += InorderTraversal(node.LeftChild);
@@ -281,14 +282,19 @@ namespace AlgoDataStructure
         {
             string output = "";
 
+            if (_root == null)
+            {
+                return output;
+            }
             output = PreTraversal(_root);
-
+            
             return output.Remove(output.Length - 2);
         }
 
         private string PreTraversal(Node<T> node)
         {
             string returnThis = "";
+
 
             returnThis += node.Data + ", ";
 
@@ -313,6 +319,11 @@ namespace AlgoDataStructure
         {
             string output = "";
 
+            if (_root == null)
+            {
+                return output = "";
+            }
+
             output = PostTraversal(_root);
 
             return output.Remove(output.Length - 2);
@@ -322,6 +333,10 @@ namespace AlgoDataStructure
         {
             string returnThis = "";
 
+            if (_root == null)
+            {
+                returnThis = "";
+            }
 
             if (node.LeftChild != null)
             {

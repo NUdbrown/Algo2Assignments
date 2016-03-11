@@ -45,8 +45,15 @@ namespace AlgoTest
             Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
 
+            bst.Clear();
+
             Console.WriteLine("Count:" + bst.Count());
             Console.WriteLine();
+
+            Console.WriteLine();
+            Console.WriteLine("\nInorder:" + bst.Inorder());
+            Console.WriteLine("\nPostorder:" + bst.Postorder());
+            Console.WriteLine("\nPreorder:" + bst.Preorder());
 
             //Console.WriteLine();
             //Console.WriteLine("\nPreorder:" + bst.Preorder());
