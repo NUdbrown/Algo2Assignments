@@ -21,27 +21,35 @@ namespace MazeSolver
         {
             //read in the file from args
 
-            var list = new List<string>();
             var fileStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
             {
-                string line;
-                
-                while (fileStream.CanRead)
-                {
 
+                var list = new List<string>();
+                while (!streamReader.EndOfStream)
+                {
+                    var line = "";
                     line = streamReader.ReadLine();
-                    list.Add(line);
-                    if (line == String.Empty)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        list.Remove(list[list.Count - 1]);
+                        list.Add(line);
                     }
+                    else
+                    {
+                        var lines = list.ToArray();
+                        SolveMaze(lines);
+                        list = new List<string>();
+                    }
+
+
+
+
                 }
             }
 
-            var lines = list.ToArray();
-            
-            SolveMaze(lines);
+
+            //SeparationOfConnections(lines);
+
         }
 
         //read & get & save list of nodes ... split based off comma
@@ -61,20 +69,46 @@ namespace MazeSolver
         public static string SolveMaze(string[] lines)
         {
             var keepTrack = SeparationOfConnections(lines);
-            string[] beginend = lines[1].Split(',');
+            string[] beginend = lines[0].Split(',');
             var start = beginend.ElementAt(0);
             var end = beginend.ElementAt(1);
             var output = new List<string>();
-            bool foundPath = false;
+            //bool foundPath = false;
+            output.Add(start);
 
-            while (!foundPath)
+            //while (!foundPath)
+            //{
+            //get the first value in the keys list, check if its a key and add it to the output
+            //keep checking the values until you've reached the end 
+
+            for (int i = 0; i <= keepTrack.Keys.Count - 1; i++)
             {
-                output.Add(start);
-                for (int i = 0; i <= keepTrack.Count - 1; i++)
+                string[] valueToGet;
+                string key = keepTrack.Keys.ElementAt(i);
+                keepTrack.TryGetValue(key, out valueToGet);
+                int whichValue = 0;
+
+                if (valueToGet != null)
                 {
-                    
+                    if ((valueToGet.Length == 1 && !output.Contains(valueToGet.ElementAt(whichValue))))
+                    {
+                        output.Add(valueToGet.ElementAt(whichValue));
+                        Console.WriteLine("I just added: " + valueToGet.ElementAt(whichValue));
+                    }
+                    else if (!output.Contains(valueToGet.ElementAt(whichValue)) && !output.Contains(end))
+                    {
+
+                    }
                 }
+
+                return PrintOut(output);
+
+
             }
+
+
+
+            // }
 
             return PrintOut(output) + end;
         }
@@ -85,16 +119,15 @@ namespace MazeSolver
         }
 
         //separates the connections
-        private static Dictionary<string, List<string>> SeparationOfConnections(string[] lines)
+        private static Dictionary<string, string[]> SeparationOfConnections(string[] lines)
         {
-            var keepTrack = new Dictionary<string, List<string>>();
+            var keepTrack = new Dictionary<string, string[]>();
             string[] keys = lines[0].Split(',');
-            string[] connections = new string[] { };
 
             for (var i = 2; i < lines.Length; i++)
             {
                 //take a first letter because its the key, save the other letters
-                connections = lines[i].Split(',');
+                string [] connections = lines[i].Split(',');
 
                 var letterToRemove = connections.ElementAt(0);
                 Console.WriteLine("\nLetter Removed: " + letterToRemove);
@@ -105,17 +138,24 @@ namespace MazeSolver
                 {
                     Console.WriteLine(command);
                 }
-            }
 
+               keepTrack.Add(keys[i-2], connections);
+                
+            }
             //add those letters to their matching key
-            for (int j = 0; j <= keys.Length - 1; j++)
-            {
-                keepTrack.Add(keys.ElementAt(j), connections.ToList());
-            }
 
-            Console.ReadLine();
-            //return the connections
+           // PrintKeepTrack(keepTrack);
+
             return keepTrack;
         }
+
+        //private static void PrintKeepTrack(Dictionary<string, string[]> keyPair)
+        //{
+        //    string items = "";
+        //    foreach (var pair in keyPair)
+        //    {
+        //        Console.WriteLine("Key: " + pair.Key + " Values:" + pair.Value);
+        //    }
+        //}
     }
 }
