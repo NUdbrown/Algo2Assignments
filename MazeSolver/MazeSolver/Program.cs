@@ -41,9 +41,6 @@ namespace MazeSolver
                         list = new List<string>();
                     }
 
-
-
-
                 }
             }
 
@@ -72,45 +69,27 @@ namespace MazeSolver
             string[] beginend = lines[0].Split(',');
             var start = beginend.ElementAt(0);
             var end = beginend.ElementAt(1);
-            var output = new List<string>();
-            //bool foundPath = false;
-            output.Add(start);
 
-            //while (!foundPath)
-            //{
-            //get the first value in the keys list, check if its a key and add it to the output
-            //keep checking the values until you've reached the end 
+            //Implements a depth-ﬁrst search traversal of a given graph 
+            //Input: Graph G=V,E
+            //Output: Graph G with its vertices marked with consecutive integers 
+            // in the order they are ﬁrst encountered by the DFS traversal 
+            //mark each vertex in V with 0 as a mark of being “unvisited” 
+            //count ←0 
+            //for each vertex v in V do 
+            //if v is marked with 0 
+            //dfs(v)
 
-            for (int i = 0; i <= keepTrack.Keys.Count - 1; i++)
-            {
-                string[] valueToGet;
-                string key = keepTrack.Keys.ElementAt(i);
-                keepTrack.TryGetValue(key, out valueToGet);
-                int whichValue = 0;
-
-                if (valueToGet != null)
-                {
-                    if ((valueToGet.Length == 1 && !output.Contains(valueToGet.ElementAt(whichValue))))
-                    {
-                        output.Add(valueToGet.ElementAt(whichValue));
-                        Console.WriteLine("I just added: " + valueToGet.ElementAt(whichValue));
-                    }
-                    else if (!output.Contains(valueToGet.ElementAt(whichValue)) && !output.Contains(end))
-                    {
-
-                    }
-                }
-
-                return PrintOut(output);
+            //dfs(v) 
+            //visits recursively all the unvisited vertices connected to vertex v 
+            //by a path and numbers them in the order they are encountered 
+            //via global variable count 
+            //count ←count +1; mark v with count 
+            //for each vertex w in V adjacent to v do 
+            //if w is marked with 0 dfs(w)
 
 
-            }
-
-
-
-            // }
-
-            return PrintOut(output) + end;
+            return null;
         }
 
         private static string PrintOut(List<string> outputs)
@@ -129,7 +108,8 @@ namespace MazeSolver
                 //take a first letter because its the key, save the other letters
                 string [] connections = lines[i].Split(',');
 
-                var letterToRemove = connections.ElementAt(0);
+                var letterToRemove = connections[0];
+                
                 Console.WriteLine("\nLetter Removed: " + letterToRemove);
 
                 connections = connections.Where(val => val != letterToRemove).ToArray();
