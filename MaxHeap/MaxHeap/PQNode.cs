@@ -6,46 +6,40 @@ using System.Threading.Tasks;
 
 namespace MaxHeap
 {
-    public class PQNode<T> where T : IComparable<T>
+    public class PQNode
     {
-        private T data;
-        private T priority;
+        private int _value;
+        private int _priority;
 
-        public PQNode(T priority, T data)
+        public PQNode(int priority, int value)
         {
-            this.data = data;
-            this.priority = priority;
-            LeftChild = null;
-            RightChild = null;
+            this._value = value;
+            this._priority = priority;
         }
 
-        public PQNode<T> LeftChild { get; set; }
-
-        public PQNode<T> RightChild { get; set; }
-
-        public T Data
+        public int Value
         {
             get
             {
-                return data;
+                return _value;
             }
 
             set
             {
-                value = data;
+                value = _value;
             }
 
         }
 
-        public T Priority
+        public int Priority
         {
-            get { return priority; }
-            set { value = priority; }
+            get { return _priority; }
+            set { value = _priority; }
         }
 
         //public bool Contains(T value)
         //{
-        //    int result = value.CompareTo(data);
+        //    int result = value.CompareTo(_value);
         //    if (result == 0)
         //    {
         //        return true;
