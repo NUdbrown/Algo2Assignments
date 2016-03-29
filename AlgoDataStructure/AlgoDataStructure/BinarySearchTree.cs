@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace AlgoDataStructure
     {
         private int _count;
         private Node<T> _root;
-        private List<T> _tree = new List<T>();
+        private readonly List<T> _tree = new List<T>();
 
         public void Initializer()
         {
@@ -68,17 +69,13 @@ namespace AlgoDataStructure
             }
             _count++;
 
-            //PrintTree();
-
         }
 
-        //private void PrintTree()
+        //private void ReOrderTreeAtRoot(int loc)
         //{
-        //    foreach (var item in _tree)
-        //    {
-        //        Console.WriteLine("[ " + item + "]");
-        //        Console.WriteLine();
-        //    }
+        //    T temp = _tree[loc];
+        //    _tree[0] = temp;
+        //    _tree.RemoveAt(loc);            
         //}
 
         //returns true if the specified value is in the tree.
@@ -99,127 +96,211 @@ namespace AlgoDataStructure
         The one closests to the root. The next inorder value should take the place of the removed value.*/
         public bool Remove(T value)
         {
-            
-            Node<T> target = null;
-            
+            //Node<T> target = null;
+
             Node<T> parent = null;
-            
+
             Node<T> current = _root;
 
-            while (current != null)
+            if (Contains(value))
             {
-                if (value.CompareTo(current.Data) == 0) 
+                if (value.CompareTo(current.Data) == 0)
                 {
-                    target = current;
-                    break;
-                }
-                else if (value.CompareTo(current.Data) > 0) 
-                {
-                    parent = current;
-                    current = current.RightChild;
-                }
-                else 
-                {
-                    parent = current;
-                    current = current.LeftChild;
-                }
-            }
+                    Node<T>[] temp = FindLastLeftNode(current);
 
-            if (target == null)
+                    if (temp[1].RightChild != null)
+                    {
+                        temp[0].LeftChild = temp[1].RightChild;
+                    }
+
+                    Node<T> oldRootsLeftChild = _root.LeftChild;
+                    current = temp[1];
+                    current.RightChild = temp[0];
+                    current.LeftChild = oldRootsLeftChild;
+                    _root = current;
+
+                }
+                else
+                {
+                    Node<T> temp = current;
+
+                    while (!temp.Data.Equals(value))
+                    {
+                        parent = temp;
+
+                        if (temp.Data.CompareTo(value) < 0)
+                        {
+                            temp = temp.RightChild;
+                            if (temp.Data.Equals(value))
+                            {
+                                break;
+                            }
+                        }
+                        else if (temp.Data.CompareTo(value) > 0)
+                        {
+                            temp = temp.LeftChild;
+                            if (temp.Data.Equals(value))
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    Node<T>[] pairs = FindLastLeftNode(temp);
+
+                    if (pairs[1] == null && pairs[0] == null) //no kids
+                    {
+                        if (parent.RightChild.Data.Equals(value))
+                        {
+                            parent.RightChild = null;
+                        }
+                        else
+                        {
+                            parent.LeftChild = null;
+                        }
+                    }
+                    else if (pairs[1] != null)
+                    {
+                        if (temp.LeftChild != null && temp.RightChild != null || temp.LeftChild == null && temp.RightChild != null)
+                        {
+                            Node<T> oldRootsLeftChild = temp.LeftChild;
+                            temp = temp.RightChild;
+                            temp.LeftChild = oldRootsLeftChild;
+                            parent.LeftChild = temp;
+                        }
+                        else if (temp.LeftChild != null && temp.RightChild == null)
+                        {
+                            Node<T> oldRootsLeftChild = temp.LeftChild;
+                            temp = temp.LeftChild;
+                            parent.RightChild = temp;
+                        }
+                       
+                    }
+                    else if (pairs[1] == null)
+                    {
+                        if (temp.LeftChild == null && temp.RightChild == null)
+                        {
+                            temp = null;
+                            parent.LeftChild = temp;
+                        }
+                    }
+
+                }
+
+                _count--;
+
+
+            }
+            else
             {
                 return false;
             }
 
-           bool isLeft = target == parent.LeftChild;
 
-            if (target == _root) 
-            {
-                current = FindLastLeftNode(parent.RightChild);
-                if (current != null)
-                {
-                    current.LeftChild = parent.LeftChild;
-                    current.RightChild = parent.RightChild;
-                    _root = current;
-                }
-            }
-            else if (target.IsLeaf())
-            {
-                if (isLeft)
-                {
-                    parent.LeftChild = null;
-                }
-                else
-                {
-                    parent.RightChild = null;
-                }
-            }
-            else if (target.LeftChild != null && target.RightChild != null) //two children
-            {
-                if (isLeft)
-                {
-                    parent.LeftChild = target.RightChild;
-                    parent.LeftChild = target.LeftChild;
-                }
-                else
-                {
-                    parent.RightChild = target.RightChild;
-                    parent.RightChild = target.LeftChild;
-                }
-            }
-            else    //one child 
-            {
-                if (target.LeftChild == null)
-                {
-                    if (isLeft)
-                    {
-                        parent.LeftChild = target.LeftChild;
-                    }
-                    else
-                    {
-                        parent.RightChild = target.LeftChild ;
-                    }
-                }
-                else
-                {
-                    if (isLeft)
-                    {
-                        parent.LeftChild = target.LeftChild;
-                    }
-                    else
-                    {
-                        parent.RightChild = target.RightChild;
-                    }
-                }
-            }
+            //bool isLeft = (target == parent.LeftChild);
 
-            _tree.Remove(value);
-            _count--;
+            //if (target == _root)
+            //{
+            //    current = FindLastLeftNode(parent.RightChild);
+            //    if (current != null)
+            //    {
+            //        current.LeftChild = parent.LeftChild;
+            //        current.RightChild = parent.RightChild;
+            //        _root = current;
+            //    }
+            //}
+            //else if (target.IsLeaf())
+            //{
+            //    if (isLeft)
+            //    {
+            //        parent.LeftChild = null;
+            //    }
+            //    else
+            //    {
+            //        parent.RightChild = null;
+            //    }
+            //}
+            //else if (target.LeftChild != null && target.RightChild != null) //two children
+            //{
+            //    if (isLeft)
+            //    {
+            //        parent.LeftChild = target.RightChild;
+            //        parent.LeftChild = target.LeftChild;
+            //    }
+            //    else
+            //    {
+            //        parent.RightChild = target.RightChild;
+            //        parent.RightChild = target.LeftChild;
+            //    }
+            //}
+            //else    //one child 
+            //{
+            //    if (target.LeftChild == null)
+            //    {
+            //        if (isLeft)
+            //        {
+            //            parent.LeftChild = target.LeftChild;
+            //        }
+            //        else
+            //        {
+            //            parent.RightChild = target.LeftChild;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (isLeft)
+            //        {
+            //            parent.LeftChild = target.LeftChild;
+            //        }
+            //        else
+            //        {
+            //            parent.RightChild = target.RightChild;
+            //        }
+            //    }
+            //}
+
+
             return true;
         }
 
-        private static Node<T> FindLastLeftNode(Node<T> start)
+        private static Node<T>[] FindLastLeftNode(Node<T> start)
         {
             Node<T> candidate = null;
             Node<T> parent = null;
             Node<T> node = start;
 
-            while (node != null)
+            Node<T>[] pair = new Node<T>[2];
+
+            if (node.RightChild != null)
             {
-                if (node.LeftChild != null)
+                node = node.RightChild;
+                while (node != null)
                 {
-                    parent = node;
-                    candidate = node.LeftChild;
+                    if (node.LeftChild != null)
+                    {
+                        parent = node;
+                        node = node.LeftChild;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
-                node = node.LeftChild;
-            }
+                candidate = node;
 
-            if (parent != null)
+                pair[0] = parent;
+                pair[1] = candidate;
+            }
+            else
             {
-                parent.LeftChild = null;
+                candidate = node.LeftChild;
+                pair[0] = node;
+                pair[1] = candidate;
             }
 
-            return candidate;
+
+            return pair;
         }
 
 
@@ -259,7 +340,7 @@ namespace AlgoDataStructure
         {
             string returnThis = "";
 
-            
+
             if (node.LeftChild != null)
             {
                 returnThis += InorderTraversal(node.LeftChild);
@@ -287,7 +368,7 @@ namespace AlgoDataStructure
                 return output;
             }
             output = PreTraversal(_root);
-            
+
             return output.Remove(output.Length - 2);
         }
 
@@ -389,10 +470,19 @@ namespace AlgoDataStructure
         }
 
         //returns an Array representation of the values in the BST using in-order traversal.
-        public T[] ToArray()
+        public char[] ToArray()
         {
-            _tree.Sort();
-            return _tree.ToArray();
+            char[] array = new char[Count()];
+            int i = 0;
+            foreach (var item in InorderTraversal(_root))
+            {
+                array[i] = item;
+                i++;
+            }
+
+            return array;
+
+            //return array;
         }
 
         //public class AVLTree
