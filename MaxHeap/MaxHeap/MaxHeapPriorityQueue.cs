@@ -135,6 +135,11 @@ namespace MaxHeap
         {
             string item = "";
 
+            if (_count == 0)
+            {
+                return item;
+            }
+
             for (int i = 1; i <= _count; i++)
             {
                 item += _holdthis[i].Priority + ":" + _holdthis[i].Value + ", ";
@@ -153,22 +158,49 @@ namespace MaxHeap
             PQNode [] outputArray = new PQNode[_count];
             Array.Copy(_holdthis, 1, outputArray, 0, _count);
 
-            int pos = outputArray.Length;
+            HeapSort(outputArray);
 
-            while (pos < outputArray.Length && pos != 0)
+           return outputArray;
+        }
+
+        private void HeapSort(PQNode[] a)
+        {
+            int count = a.Length;
+            int end = count - 1;
+
+            while (end > 0)
             {
-                pos--;
-                
-                    PQNode temp = outputArray[0];
-                    outputArray[0] = outputArray[pos];
-                    outputArray[pos] = temp;
-
-                    HeapifyDown(0);                 
-               
-
+                //swap max value of the heap with the last element of the heap
+                PQNode tmp = a[end];
+                a[end] = a[0];
+                a[0] = tmp;
+                //put the heap back in max-heap order
+                Heapify(a, end - 1);
+                //decrease size of the heap so that the previous max value will stay in its new place
+                end--;
             }
+        }
 
-            return outputArray;
+        public void Heapify(PQNode[] a, int end)
+        {
+            
+            int root = 0;
+
+            while ((root * 2) + 1 <= end)
+            {      
+                int child = root * 2 + 1;
+                if (child + 1 <= end && a[child].Priority < a[child + 1].Priority)
+                    child = child + 1;           
+                if (a[root].Priority < a[child].Priority)
+                {
+                    PQNode tmp = a[root];
+                    a[root] = a[child];
+                    a[child] = tmp;
+                    root = child;                
+                }
+                else
+                    return;
+            }
         }
     }
 }

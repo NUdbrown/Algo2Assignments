@@ -15,12 +15,13 @@ namespace MaxHeapTest
 
             pq.Enqueue(26, 3);
             pq.Enqueue(24, 3);
+            pq.Enqueue(18, 3);
             pq.Enqueue(5, 3);
             pq.Enqueue(20, 3);
             pq.Enqueue(16, 3);
-
+            pq.Enqueue(16, 3);
             pq.Enqueue(14, 3);
-            pq.Enqueue(12, 3);        
+            pq.Enqueue(12, 3);
             pq.Enqueue(9, 3);
             pq.Enqueue(10, 3);
             pq.Enqueue(6, 3);
@@ -32,8 +33,9 @@ namespace MaxHeapTest
 
             //Console.WriteLine("DEQUEUE: " + pq.Dequeue());
             //Console.WriteLine("TOSTRING: " + pq.ToString()); //works
-            //Console.WriteLine("COUNT: " + pq.Count()); //works
+            Console.WriteLine("COUNT: " + pq.Count()); //works
 
+            //pq.ToSortedArray();
 
             for (int i = 0; i < pq.ToSortedArray().Length; i++)
             {
