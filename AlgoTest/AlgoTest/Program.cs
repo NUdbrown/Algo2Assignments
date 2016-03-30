@@ -12,6 +12,11 @@ namespace AlgoTest
         static void Main(string[] args)
         {
             BinarySearchTree<int> bst = new BinarySearchTree<int>();
+
+            //bst.Add(24);
+            //bst.Add(10);
+            //bst.Add(1337);
+
             bst.Add(50);
             bst.Add(17);
             bst.Add(72);
@@ -39,13 +44,13 @@ namespace AlgoTest
             //Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
 
-            Console.WriteLine();
-            Console.WriteLine("\nRemove: I'm removing 19 : " + bst.Remove(19));
+            //Console.WriteLine();
+            //Console.WriteLine("\nRemove: I'm removing 17 : " + bst.Remove(17));
 
             Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
 
-            Console.WriteLine("\nRemove: I'm removing 50 : " + bst.Remove(50));
+            Console.WriteLine("\nRemove: I'm removing 72 : " + bst.Remove(72));
 
             //bst.Clear();
 
@@ -64,10 +69,10 @@ namespace AlgoTest
             //Console.WriteLine();
             //Console.WriteLine("\nPostorder:" + bst.Postorder());
 
-            //foreach (var item in bst.ToArray())
-            //{
-            //    Console.WriteLine(item);
-            //}
+            foreach (var item in bst.ToArray())
+            {
+                Console.WriteLine(item);
+            }
 
             Console.ReadLine();
 

@@ -71,13 +71,6 @@ namespace AlgoDataStructure
 
         }
 
-        //private void ReOrderTreeAtRoot(int loc)
-        //{
-        //    T temp = _tree[loc];
-        //    _tree[0] = temp;
-        //    _tree.RemoveAt(loc);            
-        //}
-
         //returns true if the specified value is in the tree.
         public bool Contains(T value)
         {
@@ -181,84 +174,21 @@ namespace AlgoDataStructure
                         if (temp.LeftChild == null && temp.RightChild == null)
                         {
                             temp = null;
-                            parent.LeftChild = temp;
+                            parent.RightChild = temp;
                         }
                     }
 
                 }
 
+                _tree.RemoveAt(WhereInTheTree(value));
                 _count--;
-
+                
 
             }
             else
             {
                 return false;
             }
-
-
-            //bool isLeft = (target == parent.LeftChild);
-
-            //if (target == _root)
-            //{
-            //    current = FindLastLeftNode(parent.RightChild);
-            //    if (current != null)
-            //    {
-            //        current.LeftChild = parent.LeftChild;
-            //        current.RightChild = parent.RightChild;
-            //        _root = current;
-            //    }
-            //}
-            //else if (target.IsLeaf())
-            //{
-            //    if (isLeft)
-            //    {
-            //        parent.LeftChild = null;
-            //    }
-            //    else
-            //    {
-            //        parent.RightChild = null;
-            //    }
-            //}
-            //else if (target.LeftChild != null && target.RightChild != null) //two children
-            //{
-            //    if (isLeft)
-            //    {
-            //        parent.LeftChild = target.RightChild;
-            //        parent.LeftChild = target.LeftChild;
-            //    }
-            //    else
-            //    {
-            //        parent.RightChild = target.RightChild;
-            //        parent.RightChild = target.LeftChild;
-            //    }
-            //}
-            //else    //one child 
-            //{
-            //    if (target.LeftChild == null)
-            //    {
-            //        if (isLeft)
-            //        {
-            //            parent.LeftChild = target.LeftChild;
-            //        }
-            //        else
-            //        {
-            //            parent.RightChild = target.LeftChild;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (isLeft)
-            //        {
-            //            parent.LeftChild = target.LeftChild;
-            //        }
-            //        else
-            //        {
-            //            parent.RightChild = target.RightChild;
-            //        }
-            //    }
-            //}
-
 
             return true;
         }
@@ -283,6 +213,7 @@ namespace AlgoDataStructure
                     }
                     else
                     {
+                        parent = start;
                         break;
                     }
                 }
@@ -301,6 +232,22 @@ namespace AlgoDataStructure
 
 
             return pair;
+        }
+
+ 
+        private int WhereInTheTree(T value)
+        {
+            int returnThis = 0;
+            for (int i = 0; i <= Count(); i++)
+            {
+                if (_tree[i].Equals(value))
+                {
+                    returnThis = i;
+                    break;
+                }
+            }
+
+            return returnThis;
         }
 
 
@@ -470,25 +417,35 @@ namespace AlgoDataStructure
         }
 
         //returns an Array representation of the values in the BST using in-order traversal.
-        public char[] ToArray()
+        public T [] ToArray()
         {
-            char[] array = new char[Count()];
-            int i = 0;
-            foreach (var item in InorderTraversal(_root))
-            {
-                array[i] = item;
-                i++;
-            }
-
-            return array;
-
-            //return array;
+            _tree.Sort();
+            return _tree.ToArray();
         }
 
-        //public class AVLTree
+        //private T InorderTraversalForArray(Node<T> node)
         //{
+        //    T addThis;
+        //    if (node.LeftChild != null)
+        //    {
+
+        //        addThis = InorderTraversalForArray(node.LeftChild);
+        //    }
+
+
+        //    if (node.RightChild != null)
+        //    {
+        //       addThis =  InorderTraversalForArray(node.RightChild);               
+        //    }
+
+        //    return addThis;
 
         //}
+
+        public class AVLTree
+        {
+
+        }
 
     }
 }

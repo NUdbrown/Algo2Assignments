@@ -13,12 +13,19 @@ namespace AlgoDataStructure
 
         private T data;
         private Node<T> leftChild, rightChild;
+        private int balance;
 
         public Node(T data)
         {
             this.data = data;
             leftChild = null;
             rightChild = null;
+        }
+
+        public Node(T data, int balance)
+        {
+            this.data = data;
+            this.balance = balance;
         }
 
         public Node<T> LeftChild
