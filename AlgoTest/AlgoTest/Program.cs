@@ -13,22 +13,22 @@ namespace AlgoTest
         {
             BinarySearchTree<int> bst = new BinarySearchTree<int>();
 
-            //bst.Add(24);
-            //bst.Add(10);
-            //bst.Add(1337);
+            bst.Add(24);
+            bst.Add(10);
+            bst.Add(1337);
 
             bst.Add(50);
             bst.Add(17);
             bst.Add(72);
-            bst.Add(12);
-            bst.Add(23);
-            bst.Add(54);
+            //bst.Add(12);
+            //bst.Add(23);
+            //bst.Add(54);
 
-            bst.Add(76);
+            //bst.Add(76);
             bst.Add(9);
-            bst.Add(14);
-            bst.Add(19);
-            bst.Add(67);
+            //bst.Add(14);
+            //bst.Add(19);
+            //bst.Add(67);
 
             //bst.Add(35);
             //bst.Add(80);
@@ -50,7 +50,7 @@ namespace AlgoTest
             Console.WriteLine();
             Console.WriteLine("\nInorder:" + bst.Inorder());
 
-            Console.WriteLine("\nRemove: I'm removing 72 : " + bst.Remove(72));
+            Console.WriteLine("\nRemove: I'm removing 24 : " + bst.Remove(24));
 
             //bst.Clear();
 

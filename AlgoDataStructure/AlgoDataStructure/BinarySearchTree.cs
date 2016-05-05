@@ -89,108 +89,90 @@ namespace AlgoDataStructure
         The one closests to the root. The next inorder value should take the place of the removed value.*/
         public bool Remove(T value)
         {
-            //Node<T> target = null;
-
-            Node<T> parent = null;
+           //no children
+           //one child - right or left
+           //both children
 
             Node<T> current = _root;
+            Node<T>[] valuesNodeDetails = FindNodeToRemove(value);
+            Node<T> parent = valuesNodeDetails[3];
+            Node<T> foundNode = valuesNodeDetails[0];
 
-            if (Contains(value))
+            //check to see where to travel to look for the node
+            //once you find the node, find the node it will be replaced with
+
+            //no children
+            if (valuesNodeDetails[1] == null && valuesNodeDetails[2] == null)
             {
-                if (value.CompareTo(current.Data) == 0)
+                if (foundNode.Data.CompareTo(parent.Data) > 0)
                 {
-                    Node<T>[] temp = FindLastLeftNode(current);
-
-                    if (temp[1].RightChild != null)
-                    {
-                        temp[0].LeftChild = temp[1].RightChild;
-                    }
-
-                    Node<T> oldRootsLeftChild = _root.LeftChild;
-                    current = temp[1];
-                    current.RightChild = temp[0];
-                    current.LeftChild = oldRootsLeftChild;
-                    _root = current;
-
+                    parent.RightChild = null;
                 }
                 else
                 {
-                    Node<T> temp = current;
-
-                    while (!temp.Data.Equals(value))
-                    {
-                        parent = temp;
-
-                        if (temp.Data.CompareTo(value) < 0)
-                        {
-                            temp = temp.RightChild;
-                            if (temp.Data.Equals(value))
-                            {
-                                break;
-                            }
-                        }
-                        else if (temp.Data.CompareTo(value) > 0)
-                        {
-                            temp = temp.LeftChild;
-                            if (temp.Data.Equals(value))
-                            {
-                                break;
-                            }
-                        }
-                    }
-
-                    Node<T>[] pairs = FindLastLeftNode(temp);
-
-                    if (pairs[1] == null && pairs[0] == null) //no kids
-                    {
-                        if (parent.RightChild.Data.Equals(value))
-                        {
-                            parent.RightChild = null;
-                        }
-                        else
-                        {
-                            parent.LeftChild = null;
-                        }
-                    }
-                    else if (pairs[1] != null)
-                    {
-                        if (temp.LeftChild != null && temp.RightChild != null || temp.LeftChild == null && temp.RightChild != null)
-                        {
-                            Node<T> oldRootsLeftChild = temp.LeftChild;
-                            temp = temp.RightChild;
-                            temp.LeftChild = oldRootsLeftChild;
-                            parent.LeftChild = temp;
-                        }
-                        else if (temp.LeftChild != null && temp.RightChild == null)
-                        {
-                            Node<T> oldRootsLeftChild = temp.LeftChild;
-                            temp = temp.LeftChild;
-                            parent.RightChild = temp;
-                        }
-                       
-                    }
-                    else if (pairs[1] == null)
-                    {
-                        if (temp.LeftChild == null && temp.RightChild == null)
-                        {
-                            temp = null;
-                            parent.RightChild = temp;
-                        }
-                    }
-
+                    parent.LeftChild = null;
                 }
+            }
 
-                _tree.RemoveAt(WhereInTheTree(value));
-                _count--;
-                
+            //one child
+            if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null)
+            {
+                Node<T> temp = foundNode;
+                foundNode = foundNode.LeftChild;
+                temp = null;
 
             }
             else
             {
-                return false;
+                Node<T> temp = foundNode;
+                foundNode = foundNode.RightChild;
+                temp = null;
             }
+            //both children
+
+  
 
             return true;
+        }
+
+        private Node<T> [] FindNodeToRemove(T value)
+        {
+            Node<T> current = _root;
+            Node<T> [] nodeDetails = new Node<T> [] {};
+            bool notFound = true;
+            Node<T> left = null, right = null, parent = null;
+
+            while (notFound)
+            {
+                if (current != null)
+                {
+                    if (value.CompareTo(current.Data) < 0)
+                    {
+                        parent = current;
+                        current = current.RightChild;
+
+                    }
+                    else if (value.CompareTo(current.Data) > 0)
+                    {
+                        parent = current;
+                        current = current.LeftChild;
+                    }
+                    else
+                    {
+                        left = current.LeftChild;
+                        right = current.RightChild;
+                        notFound = false;
+                    }
+                }
+
+            }
+
+            nodeDetails[0] = current;
+            nodeDetails[1] = left;
+            nodeDetails[2] = right;
+            nodeDetails[3] = parent;
+
+            return nodeDetails;
         }
 
         private static Node<T>[] FindLastLeftNode(Node<T> start)
