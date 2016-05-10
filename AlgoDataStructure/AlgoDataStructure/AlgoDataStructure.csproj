@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinarySearchTree.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="BST\BinarySearchTree.cs" />
+    <Compile Include="LinkedLists\DoubleLinkedList.cs" />
+    <Compile Include="LinkedLists\SingleLinkedList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
