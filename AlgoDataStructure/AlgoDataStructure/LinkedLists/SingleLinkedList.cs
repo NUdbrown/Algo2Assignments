@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace AlgoDataStructure
 {
@@ -6,7 +7,8 @@ namespace AlgoDataStructure
     {
 
         private int _count;
-        private Node<T> _headNode; 
+        private Node<T> _headNode;
+        private Node<T> _tail; 
 
         public SingleLinkedList()
         {
@@ -17,6 +19,7 @@ namespace AlgoDataStructure
         {
             _count = 0;
             _headNode = new Node<T>(default(T));
+            _tail = new Node<T>(default(T));
             
         }
 
@@ -31,6 +34,7 @@ namespace AlgoDataStructure
             }
 
             current.SetIsNextNode(temp);
+            _tail = current.GetIsNextNode();
             _count++;
         }
 
@@ -76,7 +80,6 @@ namespace AlgoDataStructure
 
             _headNode = current.GetIsNextNode();
 
-
             current.SetIsNextNode(current.GetIsNextNode().GetIsNextNode());
             _count--;
 
@@ -112,7 +115,6 @@ namespace AlgoDataStructure
 
         public T RemoveLast()
         {
-            Node<T> tail = new Node<T>(Get(Count()));
             Node<T> current = _headNode;
             Node<T> previous = null;
 
@@ -125,12 +127,12 @@ namespace AlgoDataStructure
                 current = current.GetIsNextNode();
             }
 
-            Node<T> result = tail;
-            tail = previous;
-            if (tail == null)
+            Node<T> result = _tail;
+            _tail = previous;
+            if (_tail == null)
                 _headNode = null;
             else
-                tail.SetIsNextNode(null);
+                _tail.SetIsNextNode(null);
             _count--;
 
 
@@ -161,10 +163,10 @@ namespace AlgoDataStructure
        public int Search(T value)
         {
 
-            Node<T> current = _headNode;
+            Node<T> current = _headNode.GetIsNextNode();
 
             int index = -1;
-
+            
             for (int i = 1; i < Count() && current.GetIsNextNode() != null; i++)
             {
                 if (current.GetData().Equals(value))
@@ -172,6 +174,7 @@ namespace AlgoDataStructure
                     return i;
                 }
 
+                current = current.GetIsNextNode();
             }
 
             return index;
