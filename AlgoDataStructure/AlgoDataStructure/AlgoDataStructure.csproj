@@ -7,8 +7,8 @@
     <ProjectGuid>{8B8B3A6E-C93B-4B9A-82CD-FCA2DF0D513A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AlgoDataStructure</RootNamespace>
-    <AssemblyName>AlgoDataStructure</AssemblyName>
+    <RootNamespace>AlgoDataStructures</RootNamespace>
+    <AssemblyName>brownd_AlgoDataStructures</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

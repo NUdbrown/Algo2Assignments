@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlgoDataStructure
+namespace AlgoDataStructures
 {
     public class DoubleLinkedList<T> where T : IComparable<T>
     {
-        private int _count;
+        public int Count { get; protected set; }
         private Node<T> _headNode;
         private Node<T> _tailNode; 
 
@@ -20,7 +20,7 @@ namespace AlgoDataStructure
         } 
         private void Initalize()
         {
-            _count = 0;
+            Count = 0;
             _headNode = new Node<T>(default(T));
             _tailNode = new Node<T>(default(T));
         }
@@ -39,14 +39,14 @@ namespace AlgoDataStructure
             current.SetIsNextNode(temp);
             _tailNode = current.GetIsNextNode();
             _tailNode.SetIsPreviousNode(current);
-            _count++;
+            Count++;
         }
 
         public void Insert(T value, int index)
         {
             Node<T> temp = new Node<T>(value);
 
-            if (index > 0 && index < Count())
+            if (index > 0 && index < Count)
             {             
                 if (index < FindingTheMiddleIndex())
                 {
@@ -64,7 +64,7 @@ namespace AlgoDataStructure
                 else if (index >= FindingTheMiddleIndex())
                 {
                     Node<T> current = _tailNode;
-                    for (int i = _count; i > index && current.GetIsPreviousNode() != null; i--)
+                    for (int i = Count; i > index && current.GetIsPreviousNode() != null; i--)
                     {
                         current = current.GetIsPreviousNode();
                     }
@@ -75,18 +75,13 @@ namespace AlgoDataStructure
 
                 }
 
-                _count++;
+                Count++;
             }
-        }
-
-        public int Count()
-        {
-            return _count;
         }
 
         public T Get(int index)
         {
-            if (index > 0 && index < _count)
+            if (index > 0 && index < Count)
             {
                 if (index < FindingTheMiddleIndex())
                 {
@@ -107,7 +102,7 @@ namespace AlgoDataStructure
                 {
                     Node<T> current = _tailNode;
 
-                    for (int i = _count; i > index; i--)
+                    for (int i = Count; i > index; i--)
                     {
                         if (current.GetIsPreviousNode() != null)
                         {
@@ -131,7 +126,7 @@ namespace AlgoDataStructure
             
             current.SetIsPreviousNode(null);
 
-            _count--;
+            Count--;
 
 
             return _headNode.GetData();
@@ -139,7 +134,7 @@ namespace AlgoDataStructure
 
         private int FindingTheMiddleIndex()
         {
-            decimal findMiddle = Math.Round((decimal)(_count / 2));
+            decimal findMiddle = Math.Round((decimal)(Count / 2));
 
             return Convert.ToInt32(findMiddle);
         }
@@ -149,7 +144,7 @@ namespace AlgoDataStructure
             T val = Get(index);
            
 
-            if (index > 1 && index < Count())
+            if (index > 1 && index < Count)
             {
                 if (index < FindingTheMiddleIndex())
                 {
@@ -170,7 +165,7 @@ namespace AlgoDataStructure
                 {
                     Node<T> current = _tailNode;
                    
-                    for (int i = _count; i > index; i--)
+                    for (int i = Count; i > index; i--)
                     {
                         if (current.GetIsPreviousNode() != null)
                         {
@@ -184,7 +179,7 @@ namespace AlgoDataStructure
 
             }
 
-            _count--;
+            Count--;
 
             return val;
         }
@@ -195,7 +190,7 @@ namespace AlgoDataStructure
             Node<T> current = _headNode;
             Node<T> previous = _headNode.GetIsPreviousNode();
 
-            T last = Get(Count());
+            T last = Get(Count);
 
             while (current.GetIsNextNode() != null)
             {
@@ -209,7 +204,7 @@ namespace AlgoDataStructure
                 _headNode = null;
             else
                 _tailNode.SetIsNextNode(null);
-            _count--;
+            Count--;
 
             return last;
         }
@@ -226,7 +221,7 @@ namespace AlgoDataStructure
 
             int index = -1;
 
-            for (int i = 1; i < Count() && current.GetIsNextNode() != null; i++)
+            for (int i = 1; i < Count && current.GetIsNextNode() != null; i++)
             {
                 if (current.GetData().Equals(value))
                 {

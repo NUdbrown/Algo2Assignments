@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace AlgoDataStructure
+namespace AlgoDataStructures
 {
     public class SingleLinkedList<T> where T : IComparable<T>
     {
 
-        private int _count;
+        public int _count { get; protected set; }
         private Node<T> _headNode;
         private Node<T> _tail; 
 
@@ -53,10 +53,6 @@ namespace AlgoDataStructure
             _count++;
         }
 
-        public int Count()
-        {
-            return _count;
-        }
 
         public T Get(int index)
         {
@@ -91,7 +87,7 @@ namespace AlgoDataStructure
         {
             T val = Get(index);
 
-            if (index > 1 && index < Count())
+            if (index > 1 && index < _count)
             {
                 Node<T> current = _headNode;
 
@@ -118,7 +114,7 @@ namespace AlgoDataStructure
             Node<T> current = _headNode;
             Node<T> previous = null;
 
-            T last = Get(Count());
+            T last = Get(_count);
 
 
             while (current.GetIsNextNode() != null)
@@ -167,7 +163,7 @@ namespace AlgoDataStructure
 
             int index = -1;
             
-            for (int i = 1; i < Count() && current.GetIsNextNode() != null; i++)
+            for (int i = 1; i < _count && current.GetIsNextNode() != null; i++)
             {
                 if (current.GetData().Equals(value))
                 {
