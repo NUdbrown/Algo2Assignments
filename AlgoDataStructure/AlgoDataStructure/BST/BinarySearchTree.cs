@@ -12,7 +12,7 @@ namespace AlgoDataStructure
     {
         private int _count;
         private Node<T> _root;
-        private readonly List<T> _tree = new List<T>();
+        //private readonly List<T> _tree = new List<T>();
 
         public void Initializer()
         {
@@ -29,7 +29,6 @@ namespace AlgoDataStructure
             if (_root == null)
             {
                 _root = newNode;
-                _tree.Add(_root.Data);
             }
 
             else
@@ -43,7 +42,7 @@ namespace AlgoDataStructure
                         if (current.RightChild == null)
                         {
                             current.RightChild = newNode;
-                            _tree.Add(newNode.Data);
+                            //_tree.Add(newNode.Data);
                             notAdded = false;
                         }
                         else
@@ -56,7 +55,7 @@ namespace AlgoDataStructure
                         if (current.LeftChild == null)
                         {
                             current.LeftChild = newNode;
-                            _tree.Add(newNode.Data);
+                            //////_tree.Add(newNode.Data);
                             notAdded = false;
                         }
 
@@ -92,7 +91,7 @@ namespace AlgoDataStructure
            //no children
            //one child - right or left
            //both children
-
+            bool removed = false;
             Node<T> current = _root;
             Node<T>[] valuesNodeDetails = FindNodeToRemove(value);
             Node<T> parent = valuesNodeDetails[3];
@@ -112,17 +111,28 @@ namespace AlgoDataStructure
                 {
                     parent.LeftChild = null;
                 }
+
+                _count--;
+                removed = true;
             }
 
-            //one child
+            //one child, left
             if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null)
             {
-                Node<T> temp = foundNode;
+               //if no right, promote left ... parents new child(left or right)
                 foundNode = foundNode.LeftChild;
-                temp = null;
+                if (parent.Data.CompareTo(foundNode.Data) >= 0)
+                {
+                    parent.RightChild = foundNode;
+                }
+                else
+                {
+                    parent.LeftChild = foundNode;
+                }
+
 
             }
-            else
+            else if(valuesNodeDetails[2] != null)
             {
                 Node<T> temp = foundNode;
                 foundNode = foundNode.RightChild;
@@ -132,15 +142,15 @@ namespace AlgoDataStructure
 
   
 
-            return true;
+            return removed;
         }
 
         private Node<T> [] FindNodeToRemove(T value)
         {
             Node<T> current = _root;
-            Node<T> [] nodeDetails = new Node<T> [] {};
             bool notFound = true;
             Node<T> left = null, right = null, parent = null;
+            Node<T> [] nodeDetails = new Node<T> [4];
 
             while (notFound)
             {
@@ -149,13 +159,13 @@ namespace AlgoDataStructure
                     if (value.CompareTo(current.Data) < 0)
                     {
                         parent = current;
-                        current = current.RightChild;
+                        current = current.LeftChild;
 
                     }
                     else if (value.CompareTo(current.Data) > 0)
                     {
                         parent = current;
-                        current = current.LeftChild;
+                        current = current.RightChild;
                     }
                     else
                     {
@@ -164,6 +174,12 @@ namespace AlgoDataStructure
                         notFound = false;
                     }
                 }
+                else
+                {
+                    notFound = false;
+                    break;
+                }
+
 
             }
 
@@ -217,20 +233,20 @@ namespace AlgoDataStructure
         }
 
  
-        private int WhereInTheTree(T value)
-        {
-            int returnThis = 0;
-            for (int i = 0; i <= Count(); i++)
-            {
-                if (_tree[i].Equals(value))
-                {
-                    returnThis = i;
-                    break;
-                }
-            }
+        //private int WhereInTheTree(T value)
+        //{
+        //    int returnThis = 0;
+        //    for (int i = 0; i <= Count(); i++)
+        //    {
+        //        if (_tree[i].Equals(value))
+        //        {
+        //            returnThis = i;
+        //            break;
+        //        }
+        //    }
 
-            return returnThis;
-        }
+        //    return returnThis;
+        //}
 
 
         //removes all values from the tree
@@ -401,8 +417,23 @@ namespace AlgoDataStructure
         //returns an Array representation of the values in the BST using in-order traversal.
         public T [] ToArray()
         {
-            _tree.Sort();
-            return _tree.ToArray();
+            //T [] represent = new T[_count + 1];
+            string theNodes = InorderTraversal(_root);
+
+            Type elementType = typeof(T);
+
+            string[] entries = theNodes.Split(',');
+            
+            System.Array array = Array.CreateInstance(elementType, _count);
+
+            for (int i = 0; i < _count; i++)
+            {
+                array.SetValue(Convert.ChangeType(entries[i], elementType), i);
+            }
+
+            return (T[]) array;
+
+           // return represent;
         }
 
         //private T InorderTraversalForArray(Node<T> node)
@@ -434,32 +465,32 @@ namespace AlgoDataStructure
             /*have root, left and right nodes
              *be able to get those nodes and set them*/
 
-            private T data;
-            private Node<T> leftChild, rightChild;
-            private int balance;
+            private T _data;
+            private Node<T> _leftChild, _rightChild;
+            private int _balance;
 
             public Node(T data)
             {
-                this.data = data;
-                leftChild = null;
-                rightChild = null;
+                this._data = data;
+                _leftChild = null;
+                _rightChild = null;
             }
 
             public Node(T data, int balance)
             {
-                this.data = data;
-                this.balance = balance;
+                this._data = data;
+                this._balance = balance;
             }
 
             public Node<T> LeftChild
             {
                 get
                 {
-                    return leftChild;
+                    return _leftChild;
                 }
                 set
                 {
-                    leftChild = value;
+                    _leftChild = value;
                 }
             }
 
@@ -467,12 +498,12 @@ namespace AlgoDataStructure
             {
                 get
                 {
-                    return rightChild;
+                    return _rightChild;
                 }
 
                 set
                 {
-                    rightChild = value;
+                    _rightChild = value;
                 }
 
             }
@@ -481,19 +512,19 @@ namespace AlgoDataStructure
             {
                 get
                 {
-                    return data;
+                    return _data;
                 }
 
                 set
                 {
-                    value = data;
+                    value = _data;
                 }
 
             }
 
             public bool Contains(T value)
             {
-                int result = value.CompareTo(data);
+                int result = value.CompareTo(_data);
                 if (result == 0)
                 {
                     return true;
