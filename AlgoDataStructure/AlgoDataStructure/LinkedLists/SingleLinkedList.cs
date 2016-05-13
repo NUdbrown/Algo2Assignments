@@ -1,12 +1,14 @@
 ﻿using System;
+using System.CodeDom;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace AlgoDataStructures
 {
     public class SingleLinkedList<T> where T : IComparable<T>
     {
 
-        public int _count { get; protected set; }
+        public int Count { get; protected set; }
         private Node<T> _headNode;
         private Node<T> _tail; 
 
@@ -17,7 +19,7 @@ namespace AlgoDataStructures
      
         private void Initialize()
         {
-            _count = 0;
+            Count = 0;
             _headNode = new Node<T>(default(T));
             _tail = new Node<T>(default(T));
             
@@ -27,19 +29,29 @@ namespace AlgoDataStructures
         {
             Node<T> temp = new Node<T>(value);
             Node<T> current = _headNode;
-            
-            while (current.GetIsNextNode() != null)
+
+            if (_headNode.GetData().Equals(default(T)))
             {
-                current = current.GetIsNextNode();
+                current.SetData(value);
+            }
+            else
+            {
+                while (current.GetIsNextNode() != null)
+                {
+                    current = current.GetIsNextNode();
+                }               
+                current.SetIsNextNode(temp);
+                _tail = current.GetIsNextNode();
             }
 
-            current.SetIsNextNode(temp);
-            _tail = current.GetIsNextNode();
-            _count++;
+            Count++;
         }
 
         public void Insert(T value, int index)
         {
+            if (index >= 0 && Count == 0)
+                throw new IndexOutOfRangeException();       
+
             Node<T> temp = new Node<T>(value);
             Node<T> current = _headNode;
 
@@ -50,14 +62,14 @@ namespace AlgoDataStructures
 
             temp.SetIsNextNode(current.GetIsNextNode());
             current.SetIsNextNode(temp);
-            _count++;
+            Count++;
         }
 
 
         public T Get(int index)
         {
-            if (index <= 0)
-                return default(T);
+            if (index <= 0 || index >= 0 && Count == 0)
+               throw new IndexOutOfRangeException();
 
             Node<T> current = _headNode.GetIsNextNode();
             for (int i = 1; i < index; i++)
@@ -72,23 +84,27 @@ namespace AlgoDataStructures
 
         public T Remove()
         {
+            Node<T> temp = _headNode;
             Node<T> current = _headNode;
 
             _headNode = current.GetIsNextNode();
 
             current.SetIsNextNode(current.GetIsNextNode().GetIsNextNode());
-            _count--;
+            Count--;
 
 
-            return _headNode.GetData();
+            return temp.GetData();
         }
 
         public T RemoveAt(int index)
         {
-            T val = Get(index);
 
-            if (index > 1 && index < _count)
+            if (index >= 0 && Count == 0)
             {
+               throw new IndexOutOfRangeException(); 
+            }
+
+                T val = Get(index);
                 Node<T> current = _headNode;
 
                 for (int i = 1; i < index; i++)
@@ -101,12 +117,10 @@ namespace AlgoDataStructures
                 }
 
                 current.SetIsNextNode(current.GetIsNextNode().GetIsNextNode());
+                Count--;
 
-            }
-
-            _count--;
-
-            return val;
+            
+           return val;               
         }
 
         public T RemoveLast()
@@ -114,7 +128,7 @@ namespace AlgoDataStructures
             Node<T> current = _headNode;
             Node<T> previous = null;
 
-            T last = Get(_count);
+            Node<T> oldLastNode = _tail;
 
 
             while (current.GetIsNextNode() != null)
@@ -129,24 +143,23 @@ namespace AlgoDataStructures
                 _headNode = null;
             else
                 _tail.SetIsNextNode(null);
-            _count--;
+            Count--;
 
-
-            return last;
+            return oldLastNode.GetData();
         }
 
         public string ToString()
         {
-            Node<T> current = _headNode.GetIsNextNode();
+            Node<T> current = _headNode;
             string _out = "";
-
+              
             while (current != null)
             {
-                _out += "[" + current.GetData() + "]";
+                _out += current.GetData() + ",";
                 current = current.GetIsNextNode();
             }
 
-            return _out;
+            return _out.Remove(_out.Length - 1);
         }
 
         //removes all values in the list
@@ -163,7 +176,7 @@ namespace AlgoDataStructures
 
             int index = -1;
             
-            for (int i = 1; i < _count && current.GetIsNextNode() != null; i++)
+            for (int i = 1; i < Count && current.GetIsNextNode() != null; i++)
             {
                 if (current.GetData().Equals(value))
                 {

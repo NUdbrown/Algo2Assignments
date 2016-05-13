@@ -116,10 +116,9 @@ namespace AlgoDataStructures
                 removed = true;
             }
 
-            //one child, left
-            if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null)
+            //one child, left or right
+            if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null || valuesNodeDetails[2] != null && valuesNodeDetails[1] == null)
             {
-               //if no right, promote left ... parents new child(left or right)
                 foundNode = foundNode.LeftChild;
                 if (parent.Data.CompareTo(foundNode.Data) >= 0)
                 {
@@ -393,8 +392,6 @@ namespace AlgoDataStructures
         private int HeightHelper(Node<T> r)
         {
             int height = 0;
-            int leftside = 0;
-            int rightside = 0;
 
             if (r == null)
             {
@@ -403,9 +400,9 @@ namespace AlgoDataStructures
             else
             {
 
-                leftside = HeightHelper(r.LeftChild);
+                var leftside = HeightHelper(r.LeftChild);
 
-                rightside = HeightHelper(r.RightChild);
+                var rightside = HeightHelper(r.RightChild);
 
                 height = Math.Max(leftside, rightside) + 1;
 
@@ -424,9 +421,9 @@ namespace AlgoDataStructures
 
             string[] entries = theNodes.Split(',');
             
-            System.Array array = Array.CreateInstance(elementType, _count);
+            System.Array array = Array.CreateInstance(elementType, Count());
 
-            for (int i = 0; i < _count; i++)
+            for (int i = 0; i < Count(); i++)
             {
                 array.SetValue(Convert.ChangeType(entries[i], elementType), i);
             }
