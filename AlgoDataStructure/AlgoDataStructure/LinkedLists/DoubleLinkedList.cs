@@ -12,12 +12,12 @@ namespace AlgoDataStructures
     {
         public int Count { get; protected set; }
         private Node<T> _headNode;
-        private Node<T> _tailNode; 
+        private Node<T> _tailNode;
 
         public DoubleLinkedList()
         {
             Initalize();
-        } 
+        }
         private void Initalize()
         {
             Count = 0;
@@ -27,109 +27,120 @@ namespace AlgoDataStructures
 
         public void Add(T value)
         {
+            Node<T> temp = new Node<T>(value);
+            Node<T> current = _headNode;
+
+            if (_headNode.GetData().Equals(default(T)))
+            {
+                current.SetData(value);
+            }
+            else
+            {
+                while (current.GetIsNextNode() != null)
+                {
+                    current = current.GetIsNextNode();
+                }
+                current.SetIsNextNode(temp);
+                _tailNode = current.GetIsNextNode();
+                _tailNode.SetIsPreviousNode(current);
+            }
+            Count++;
+        }
+
+        //fix insert at beginning and end
+        public void Insert(T value, int index)
+        {
+            if (index < 0 || index >= Count)
+                throw new IndexOutOfRangeException();
 
             Node<T> temp = new Node<T>(value);
             Node<T> current = _headNode;
 
-            while (current.GetIsNextNode() != null)
+            if (index < FindingTheMiddleIndex())
             {
-                current = current.GetIsNextNode();
+
+                for (int i = 0; i < index && current.GetIsNextNode() != null; i++)
+                {
+                    current = current.GetIsNextNode();
+                }
+
+                if (current == _headNode)
+                {
+                    _headNode = temp;
+                    _headNode.SetIsNextNode(current);
+                    current.SetIsPreviousNode(_headNode);
+                    _headNode.SetIsPreviousNode(null);
+                }
+                else
+                {
+                    current.GetIsPreviousNode().SetIsNextNode(temp);
+                    temp.SetIsNextNode(current);    
+                }
+
+            }
+            else
+            {
+                current = _tailNode;
+
+                for (int i = Count - 1; i > index; i--)
+                {
+                    current = current.GetIsPreviousNode();
+                }
+
+                current.GetIsPreviousNode().SetIsNextNode(temp);
+                temp.SetIsNextNode(current);
+                temp.SetIsPreviousNode(current.GetIsPreviousNode());
+                current.SetIsPreviousNode(temp);
             }
 
-            current.SetIsNextNode(temp);
-            _tailNode = current.GetIsNextNode();
-            _tailNode.SetIsPreviousNode(current);
             Count++;
-        }
-
-        public void Insert(T value, int index)
-        {
-            Node<T> temp = new Node<T>(value);
-
-            if (index > 0 && index < Count)
-            {             
-                if (index < FindingTheMiddleIndex())
-                {
-                    Node<T> current = _headNode;
-                
-                    for (int i = 1; i < index && current.GetIsNextNode() != null; i++)
-                    {
-                        current = current.GetIsNextNode();
-                    }
-
-                    temp.SetIsNextNode(current.GetIsNextNode());
-                    current.SetIsNextNode(temp);
-
-                }
-                else if (index >= FindingTheMiddleIndex())
-                {
-                    Node<T> current = _tailNode;
-                    for (int i = Count; i > index && current.GetIsPreviousNode() != null; i--)
-                    {
-                        current = current.GetIsPreviousNode();
-                    }
-
-                   current.GetIsPreviousNode().SetIsNextNode(temp);
-                    temp.SetIsNextNode(current);
-                    current.SetIsPreviousNode(temp);
-
-                }
-
-                Count++;
-            }
         }
 
         public T Get(int index)
         {
-            if (index > 0 && index < Count)
+            T result = default(T);
+            if (index >= Count || index < 0)
+                throw new IndexOutOfRangeException();
+
+            Node<T> current = _headNode;
+
+            if (index < FindingTheMiddleIndex())
             {
-                if (index < FindingTheMiddleIndex())
+
+                for (int i = 0; i < index; i++)
                 {
-                    Node<T> current = _headNode;
-
-                    for (int i = 1; i <= index; i++)
-                    {
-                        if (current.GetIsNextNode() != null)
-                        {
-                            current = current.GetIsNextNode();
-                        }
-
-                        return current.GetData();
-                    }
-
+                    current = current.GetIsNextNode();
                 }
-                else if(index >= FindingTheMiddleIndex())
-                {
-                    Node<T> current = _tailNode;
 
-                    for (int i = Count; i > index; i--)
-                    {
-                        if (current.GetIsPreviousNode() != null)
-                        {
-                            current = current.GetIsPreviousNode();
-                        }
-                    }
-
-                    return current.GetData();
-                }
             }
-            return default(T);
+            else
+            {
+                current = _tailNode;
 
+                for (int i = Count - 1; i > index; i--)
+                {
+                    current = current.GetIsPreviousNode();
+                }
+
+            }
+
+            result = current.GetData();
+
+            return result;
         }
 
         public T Remove()
         {
 
             Node<T> current = _headNode;
-
+            Node<T> temp = _headNode;
             _headNode = _headNode.GetIsNextNode();
-            
             current.SetIsPreviousNode(null);
 
             Count--;
 
 
-            return _headNode.GetData();
+            return temp.GetData();
         }
 
         private int FindingTheMiddleIndex()
@@ -141,43 +152,61 @@ namespace AlgoDataStructures
 
         public T RemoveAt(int index)
         {
+            if (index < 0 || index >= Count)
+                throw new IndexOutOfRangeException();
+
             T val = Get(index);
-           
 
-            if (index > 1 && index < Count)
+            Node<T> current = _headNode;
+
+            if (index < FindingTheMiddleIndex())
             {
-                if (index < FindingTheMiddleIndex())
+
+
+                for (int i = 0; i < index; i++)
                 {
+                    current = current.GetIsNextNode();
 
-                    Node<T> current = _headNode;
-
-                    for (int i = 1; i < index; i++)
-                    {
-                        if (current.GetIsNextNode() != null)
-                        {
-                            current = current.GetIsNextNode();
-                        }
-
-                    }
-                    current.SetIsNextNode(current.GetIsNextNode().GetIsNextNode());
                 }
-                else if(index >= FindingTheMiddleIndex())
-                {
-                    Node<T> current = _tailNode;
-                   
-                    for (int i = Count; i > index; i--)
-                    {
-                        if (current.GetIsPreviousNode() != null)
-                        {
-                            current = current.GetIsPreviousNode();
-                        }
-                    }
 
+                if (current == _headNode)
+                {
+                    _headNode = current.GetIsNextNode();
+                    _headNode.SetIsPreviousNode(null);
+                }
+                else
+                {
                     current.GetIsPreviousNode().SetIsNextNode(current.GetIsNextNode());
-                }             
+                }
 
 
             }
+            else
+            {
+                current = _tailNode;
+
+                for (int i = Count - 1; i > index; i--)
+                {
+                    current = current.GetIsPreviousNode();
+                }
+
+                if (current == _tailNode)
+                {
+                    _tailNode = _tailNode.GetIsPreviousNode();
+                    _tailNode.SetIsNextNode(null);
+                }
+                else
+                {
+                    Node<T> temp = current.GetIsNextNode();
+                    current.GetIsPreviousNode().SetIsNextNode(temp);
+                    temp.SetIsPreviousNode(temp.GetIsPreviousNode());
+                    
+                }
+                
+
+
+            }
+
 
             Count--;
 
@@ -189,8 +218,6 @@ namespace AlgoDataStructures
 
             Node<T> current = _headNode;
             Node<T> previous = _headNode.GetIsPreviousNode();
-
-            T last = Get(Count);
 
             while (current.GetIsNextNode() != null)
             {
@@ -206,7 +233,7 @@ namespace AlgoDataStructures
                 _tailNode.SetIsNextNode(null);
             Count--;
 
-            return last;
+            return result.GetData();
         }
 
         public void Clear()
@@ -217,11 +244,11 @@ namespace AlgoDataStructures
         public int Search(T value)
         {
 
-            Node<T> current = _headNode.GetIsNextNode();
+            Node<T> current = _headNode;
 
             int index = -1;
 
-            for (int i = 1; i < Count && current.GetIsNextNode() != null; i++)
+            for (int i = 0; i < Count; i++)
             {
                 if (current.GetData().Equals(value))
                 {
@@ -233,26 +260,32 @@ namespace AlgoDataStructures
 
             return index;
         }
-        
+
         public string ToString()
         {
-            Node<T> current = _headNode.GetIsNextNode();
+            Node<T> current = _headNode;
             string _out = "";
+
+            if (Count == 0)
+            {
+                return _out;
+            }
 
             while (current != null)
             {
-                _out += "[" + current.GetData() + "]";
+                _out += current.GetData() + ", ";
                 current = current.GetIsNextNode();
             }
 
-            return _out;
+
+            return _out.Remove(_out.Length - 2);
         }
 
         protected class Node<T> where T : IComparable<T>
         {
             private T _data;
             private Node<T> _isNextNode;
-            private Node<T> _isPreviousNode; 
+            private Node<T> _isPreviousNode;
 
             public Node(T initalData)
             {

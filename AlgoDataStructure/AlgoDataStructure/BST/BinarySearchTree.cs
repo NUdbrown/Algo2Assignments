@@ -10,13 +10,13 @@ namespace AlgoDataStructures
 {
     public class BinarySearchTree<T> where T : IComparable<T>
     {
-        private int _count;
+        public int Count { get; protected set; }
         private Node<T> _root;
         //private readonly List<T> _tree = new List<T>();
 
         public void Initializer()
         {
-            _count = 0;
+            Count = 0;
             _root = null;
         }
 
@@ -66,7 +66,7 @@ namespace AlgoDataStructures
                     }
                 }
             }
-            _count++;
+            Count++;
 
         }
 
@@ -88,17 +88,14 @@ namespace AlgoDataStructures
         The one closests to the root. The next inorder value should take the place of the removed value.*/
         public bool Remove(T value)
         {
-           //no children
-           //one child - right or left
-           //both children
+            //no children
+            //one child - right or left
+            //both children
             bool removed = false;
             Node<T> current = _root;
             Node<T>[] valuesNodeDetails = FindNodeToRemove(value);
             Node<T> parent = valuesNodeDetails[3];
             Node<T> foundNode = valuesNodeDetails[0];
-
-            //check to see where to travel to look for the node
-            //once you find the node, find the node it will be replaced with
 
             //no children
             if (valuesNodeDetails[1] == null && valuesNodeDetails[2] == null)
@@ -112,44 +109,69 @@ namespace AlgoDataStructures
                     parent.LeftChild = null;
                 }
 
-                _count--;
+                Count--;
                 removed = true;
             }
 
             //one child, left or right
-            if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null || valuesNodeDetails[2] != null && valuesNodeDetails[1] == null)
+            if (valuesNodeDetails[1] != null && valuesNodeDetails[2] == null)
             {
-                foundNode = foundNode.LeftChild;
-                if (parent.Data.CompareTo(foundNode.Data) >= 0)
+                if (foundNode.Data.CompareTo(parent.Data) < 0)
                 {
-                    parent.RightChild = foundNode;
+                    parent.LeftChild = foundNode.LeftChild;
                 }
                 else
                 {
-                    parent.LeftChild = foundNode;
+                    parent.RightChild = foundNode.LeftChild;
+                }
+                Count--;
+                removed = true;
+            }
+            else if (valuesNodeDetails[2] != null && valuesNodeDetails[1] == null)
+            {
+                if (foundNode.Data.CompareTo(parent.Data) < 0)
+                {
+                    parent.LeftChild = foundNode.RightChild;
+                }
+                else
+                {
+                    parent.RightChild = foundNode.RightChild;
                 }
 
-
+                Count--;
+                removed = true;
             }
-            else if(valuesNodeDetails[2] != null)
+            else //both children
             {
-                Node<T> temp = foundNode;
-                foundNode = foundNode.RightChild;
-                temp = null;
-            }
-            //both children
+                Node<T>[] lastNodeDetails = FindLastLeftNode(foundNode);
+                Node<T> lastLeft = lastNodeDetails[1];
+                Node<T> parentOfLastLeft = lastNodeDetails[0];
 
-  
+                if (foundNode.Data.CompareTo(parent.Data) < 0)
+                {
+                    parent.LeftChild = lastLeft;
+                }
+                else
+                {
+                    parent.RightChild = lastLeft;
+                }
+                lastLeft.LeftChild = foundNode.LeftChild;
+                lastLeft.RightChild = foundNode.RightChild;
+                parentOfLastLeft.LeftChild = null;
+
+                Count--;
+                removed = true;
+            }
 
             return removed;
         }
 
-        private Node<T> [] FindNodeToRemove(T value)
+        private Node<T>[] FindNodeToRemove(T value)
         {
             Node<T> current = _root;
             bool notFound = true;
             Node<T> left = null, right = null, parent = null;
-            Node<T> [] nodeDetails = new Node<T> [4];
+            Node<T>[] nodeDetails = new Node<T>[4];
 
             while (notFound)
             {
@@ -192,61 +214,34 @@ namespace AlgoDataStructures
 
         private static Node<T>[] FindLastLeftNode(Node<T> start)
         {
-            Node<T> candidate = null;
             Node<T> parent = null;
-            Node<T> node = start;
+            Node<T> currentNode = start;
 
             Node<T>[] pair = new Node<T>[2];
 
-            if (node.RightChild != null)
+            if (currentNode.RightChild != null)
             {
-                node = node.RightChild;
-                while (node != null)
+                currentNode = currentNode.RightChild;
+                while (currentNode != null)
                 {
-                    if (node.LeftChild != null)
+                    if (currentNode.LeftChild != null)
                     {
-                        parent = node;
-                        node = node.LeftChild;
+                        parent = currentNode;
+                        currentNode = currentNode.LeftChild;
                     }
                     else
                     {
-                        parent = start;
                         break;
                     }
                 }
 
-                candidate = node;
 
                 pair[0] = parent;
-                pair[1] = candidate;
+                pair[1] = currentNode;
             }
-            else
-            {
-                candidate = node.LeftChild;
-                pair[0] = node;
-                pair[1] = candidate;
-            }
-
 
             return pair;
         }
-
- 
-        //private int WhereInTheTree(T value)
-        //{
-        //    int returnThis = 0;
-        //    for (int i = 0; i <= Count(); i++)
-        //    {
-        //        if (_tree[i].Equals(value))
-        //        {
-        //            returnThis = i;
-        //            break;
-        //        }
-        //    }
-
-        //    return returnThis;
-        //}
-
 
         //removes all values from the tree
         public void Clear()
@@ -254,11 +249,6 @@ namespace AlgoDataStructures
             Initializer();
         }
 
-        //returns the number of values in the tree
-        public int Count()
-        {
-            return _count;
-        }
 
         //------------------------------------------------------------------------------------------------
         //All of the “order” functions above return a string in the format of “v1, v2, …, vn”.
@@ -412,45 +402,26 @@ namespace AlgoDataStructures
         }
 
         //returns an Array representation of the values in the BST using in-order traversal.
-        public T [] ToArray()
+        public T[] ToArray()
         {
-            //T [] represent = new T[_count + 1];
+            //T [] represent = new T[Count + 1];
             string theNodes = InorderTraversal(_root);
 
             Type elementType = typeof(T);
 
             string[] entries = theNodes.Split(',');
-            
-            System.Array array = Array.CreateInstance(elementType, Count());
 
-            for (int i = 0; i < Count(); i++)
+            System.Array array = Array.CreateInstance(elementType, Count);
+
+            for (int i = 0; i < Count; i++)
             {
                 array.SetValue(Convert.ChangeType(entries[i], elementType), i);
             }
 
-            return (T[]) array;
+            return (T[])array;
 
-           // return represent;
+            // return represent;
         }
-
-        //private T InorderTraversalForArray(Node<T> node)
-        //{
-        //    T addThis;
-        //    if (node.LeftChild != null)
-        //    {
-
-        //        addThis = InorderTraversalForArray(node.LeftChild);
-        //    }
-
-
-        //    if (node.RightChild != null)
-        //    {
-        //       addThis =  InorderTraversalForArray(node.RightChild);               
-        //    }
-
-        //    return addThis;
-
-        //}
 
         public class AVLTree
         {
