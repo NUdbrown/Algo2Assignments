@@ -21,7 +21,10 @@ namespace MazeSolver
         {
             //read in the file from args
 
-            var fileStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
+            Console.WriteLine("Please type in the location of a file that has the adjacency list of an undirected graph: ");
+            string filePath = Console.ReadLine();
+
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
             {
 
@@ -70,24 +73,17 @@ namespace MazeSolver
             var start = beginend.ElementAt(0);
             var end = beginend.ElementAt(1);
 
-            //Implements a depth-ﬁrst search traversal of a given graph 
-            //Input: Graph G=V,E
+            /**
+            //Implements a breadth-ﬁrst search traversal of a given graph 
+            //Input: Graph G=V,E 
             //Output: Graph G with its vertices marked with consecutive integers 
-            // in the order they are ﬁrst encountered by the DFS traversal 
-            //mark each vertex in V with 0 as a mark of being “unvisited” 
-            //count ←0 
-            //for each vertex v in V do 
-            //if v is marked with 0 
-            //dfs(v)
-
-            //dfs(v) 
-            //visits recursively all the unvisited vertices connected to vertex v 
-            //by a path and numbers them in the order they are encountered 
-            //via global variable count 
-            //count ←count +1; mark v with count 
-            //for each vertex w in V adjacent to v do 
-            //if w is marked with 0 dfs(w)
-
+            // in the order they are visited by the BFS traversal mark each vertex in V with 0 as a mark of being “unvisited” 
+            count ←0 
+            for each vertex v in V 
+                do if v is marked with 0 
+                bfs(v)
+bfs(v) //visits all the unvisited vertices connected to vertex v //by a path and numbers them in the order they are visited //via global variable count count ←count +1; mark v with count and initialize a queue with v while the queue is not empty do for each vertex w in V adjacent to the front vertex do if w is marked with 0 count ←count +1; mark w with count add w to the queue remove the front vertex from the queue
+            */
 
             return null;
         }
@@ -110,13 +106,13 @@ namespace MazeSolver
 
                 var letterToRemove = connections[0];
                 
-                Console.WriteLine("\nLetter Removed: " + letterToRemove);
+                Console.WriteLine("\nKEY[letter removed]: " + letterToRemove);
 
                 connections = connections.Where(val => val != letterToRemove).ToArray();
 
-                foreach (var command in connections)
+                foreach (var connectedTo in connections)
                 {
-                    Console.WriteLine(command);
+                    Console.WriteLine("connection: " + connectedTo);
                 }
 
                keepTrack.Add(keys[i-2], connections);
