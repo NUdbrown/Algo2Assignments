@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AlgoDataStructures
 {
-    public class BinarySearchTree<T> where T : IComparable<T>
+    public class AVLTree<T> where T: IComparable<T>
     {
+
         public int Count { get; protected set; }
         private Node<T> _root;
-        
+
         public void Initializer()
         {
             Count = 0;
@@ -54,7 +53,6 @@ namespace AlgoDataStructures
                         if (current.LeftChild == null)
                         {
                             current.LeftChild = newNode;
-                            //////_tree.Add(newNode.Data);
                             notAdded = false;
                         }
 
@@ -82,9 +80,6 @@ namespace AlgoDataStructures
 
         }
 
-        /*removes the specified value from the tree if it is present, or does nothing if the value is not present.
-        If the value appears more than once, only the first occurrence of the value is removed.
-        The one closests to the root. The next inorder value should take the place of the removed value.*/
         public bool Remove(T value)
         {
             //no children
@@ -96,7 +91,7 @@ namespace AlgoDataStructures
             Node<T> parent = valuesNodeDetails[1];
             Node<T> foundNode = valuesNodeDetails[0];
 
-          //no children
+            //no children
             if (foundNode.LeftChild == null && foundNode.RightChild == null)
             {
                 if (foundNode.Data.CompareTo(parent.Data) < 0)
@@ -129,7 +124,7 @@ namespace AlgoDataStructures
                     {
                         parent.RightChild = foundNode.LeftChild;
                     }
-                    
+
                 }
                 Count--;
                 removed = true;
@@ -149,7 +144,7 @@ namespace AlgoDataStructures
                     else
                     {
                         parent.RightChild = foundNode.RightChild;
-                    }                    
+                    }
                 }
 
                 Count--;
@@ -182,9 +177,9 @@ namespace AlgoDataStructures
                     lastLeft.LeftChild = foundNode.LeftChild;
                     lastLeft.RightChild = foundNode.RightChild;
                     parentOfLastLeft.LeftChild = null;
-                    
+
                 }
-                
+
                 Count--;
                 removed = true;
             }
@@ -272,193 +267,21 @@ namespace AlgoDataStructures
         }
 
 
-        //------------------------------------------------------------------------------------------------
-        //All of the “order” functions above return a string in the format of “v1, v2, …, vn”.
-        //returns an in-order string representation of all the values in the BST [Left, Parent, then Right]
-        public string Inorder()
-        {
-
-            string output = "";
-
-            if (_root == null)
-            {
-                return output;
-            }
-
-            output = InorderTraversal(_root);
-
-            return output.Remove(output.Length - 2);
-
-        }
-
-
-        private string InorderTraversal(Node<T> node)
-        {
-            string returnThis = "";
-
-
-            if (node.LeftChild != null)
-            {
-                returnThis += InorderTraversal(node.LeftChild);
-            }
-
-            returnThis += node.Data + ", ";
-
-            if (node.RightChild != null)
-            {
-                returnThis += InorderTraversal(node.RightChild);
-            }
-
-            return returnThis;
-
-        }
-
-
-        //returns a pre-order string representation of all the values in the BST [Parent, Left, then Right]
-        public string Preorder()
-        {
-            string output = "";
-
-            if (_root == null)
-            {
-                return output;
-            }
-            output = PreTraversal(_root);
-
-            return output.Remove(output.Length - 2);
-        }
-
-        private string PreTraversal(Node<T> node)
-        {
-            string returnThis = "";
-
-
-            returnThis += node.Data + ", ";
-
-            if (node.LeftChild != null)
-            {
-                returnThis += PreTraversal(node.LeftChild);
-            }
-
-
-            if (node.RightChild != null)
-            {
-                returnThis += PreTraversal(node.RightChild);
-            }
-
-
-            return returnThis;
-
-        }
-
-        //returns a post-order string representation of all the values in the BST [Left, Right, then Parent]
-        public string Postorder()
-        {
-            string output = "";
-
-            if (_root == null)
-            {
-                return output = "";
-            }
-
-            output = PostTraversal(_root);
-
-            return output.Remove(output.Length - 2);
-        }
-
-        private string PostTraversal(Node<T> node)
-        {
-            string returnThis = "";
-
-            if (_root == null)
-            {
-                returnThis = "";
-            }
-
-            if (node.LeftChild != null)
-            {
-                returnThis += PostTraversal(node.LeftChild);
-            }
-
-            if (node.RightChild != null)
-            {
-                returnThis += PostTraversal(node.RightChild);
-            }
-
-            returnThis += node.Data + ", ";
-
-            return returnThis;
-
-        }
-
-        //---------------------------------------------------------------------------------------------------
-
-
-
-        //returns the height of the BST, where the empty tree is 0 and the simple tree is 1.
-        public int Height()
-        {
-            return HeightHelper(_root);
-        }
-
-        private int HeightHelper(Node<T> r)
-        {
-            int height = 0;
-
-            if (r == null)
-            {
-                height = 0;
-            }
-            else
-            {
-
-                var leftside = HeightHelper(r.LeftChild);
-
-                var rightside = HeightHelper(r.RightChild);
-
-                height = Math.Max(leftside, rightside) + 1;
-
-            }
-
-            return height;
-        }
-
-        //returns an Array representation of the values in the BST using in-order traversal.
-        public T[] ToArray()
-        {
-            //T [] represent = new T[Count + 1];
-            string theNodes = InorderTraversal(_root);
-
-            Type elementType = typeof(T);
-
-            string[] entries = theNodes.Split(',');
-
-            System.Array array = Array.CreateInstance(elementType, Count);
-
-            for (int i = 0; i < Count; i++)
-            {
-                array.SetValue(Convert.ChangeType(entries[i], elementType), i);
-            }
-
-            return (T[])array;
-
-            // return represent;
-        }
 
         protected class Node<T> where T : IComparable<T>
         {
             /*have root, left and right nodes
              *be able to get those nodes and set them*/
 
-            private T _data;
-            private Node<T> _leftChild, _rightChild;
+            private readonly T _data;
             private int _balance;
 
             public Node(T data)
             {
                 this._data = data;
-                _leftChild = null;
-                _rightChild = null;
+                LeftChild = null;
+                RightChild = null;
+                Parent = null;
             }
 
             public Node(T data, int balance)
@@ -467,31 +290,11 @@ namespace AlgoDataStructures
                 this._balance = balance;
             }
 
-            public Node<T> LeftChild
-            {
-                get
-                {
-                    return _leftChild;
-                }
-                set
-                {
-                    _leftChild = value;
-                }
-            }
+            public Node<T> LeftChild { get; set; }
 
-            public Node<T> RightChild
-            {
-                get
-                {
-                    return _rightChild;
-                }
+            public Node<T> RightChild { get; set; }
 
-                set
-                {
-                    _rightChild = value;
-                }
-
-            }
+            public Node<T> Parent { get; set; }
 
             public T Data
             {
@@ -525,10 +328,6 @@ namespace AlgoDataStructures
                 return false;
             }
 
-            public bool IsLeaf()
-            {
-                return (LeftChild == null && RightChild == null);
-            }
         }
     }
 }

@@ -97,17 +97,17 @@ namespace AlgoTest
             bst.Add(10);
             bst.Add(1337);
 
-            bst.Add(50);
-            bst.Add(1472);
-            bst.Add(72);
-            bst.Add(1360);
-            bst.Add(1345);
-            bst.Add(54);
+            //bst.Add(50);
+            //bst.Add(1472);
+            //bst.Add(72);
+            //bst.Add(1360);
+            //bst.Add(1345);
+            //bst.Add(54);
 
-            bst.Add(20);
-            bst.Add(9);
-            bst.Add(19);
-            bst.Add(14);
+            //bst.Add(20);
+            //bst.Add(9);
+            //bst.Add(19);
+            //bst.Add(14);
             //bst.Add(67);
 
             //bst.Add(35);
@@ -116,7 +116,7 @@ namespace AlgoTest
             //bst.Add(24);
             //bst.Add(5);
 
-            Console.WriteLine("Count:" + bst.Count());
+            Console.WriteLine("Count:" + bst.Count);
             //Console.WriteLine("\ncontains 24: " + bst.Contains(24));
            
             //Console.WriteLine("\ncontains 0: " + bst.Contains(0));
@@ -130,7 +130,7 @@ namespace AlgoTest
 
             //bst.Clear();
 
-            Console.WriteLine("\nCount:" + bst.Count());         
+            Console.WriteLine("\nCount:" + bst.Count);         
 
             Console.WriteLine("\nInorder:" + bst.Inorder());
             //Console.WriteLine("\nPostorder:" + bst.Postorder());
