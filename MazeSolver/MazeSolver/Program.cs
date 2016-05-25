@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace MazeSolver
@@ -17,40 +18,40 @@ namespace MazeSolver
     /// </summary>
     internal class Program
     {
-        public static void Main(string[] args)
-        {
-            //read in the file from args
+        //public static void Main(string[] args)
+        //{
+        //    //read in the file from args
 
-            Console.WriteLine("Please type in the location of a file that has the adjacency list of an undirected graph: ");
-            string filePath = Console.ReadLine();
+        //    Console.WriteLine("Please type in the location of a file that has the adjacency list of an undirected graph: ");
+        //    string filePath = Console.ReadLine();
 
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
-            {
+        //    var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+        //    using (var streamReader = new StreamReader(fileStream, Encoding.UTF8))
+        //    {
 
-                var list = new List<string>();
-                while (!streamReader.EndOfStream)
-                {
-                    var line = "";
-                    line = streamReader.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(line))
-                    {
-                        list.Add(line);
-                    }
-                    else
-                    {
-                        var lines = list.ToArray();
-                        SolveMaze(lines);
-                        list = new List<string>();
-                    }
+        //        var list = new List<string>();
+        //        while (!streamReader.EndOfStream)
+        //        {
+        //            var line = "";
+        //            line = streamReader.ReadLine();
+        //            if (!string.IsNullOrWhiteSpace(line))
+        //            {
+        //                list.Add(line);
+        //            }
+        //            else
+        //            {
+        //                var lines = list.ToArray();
+        //                SolveMaze(lines);
+        //                list = new List<string>();
+        //            }
 
-                }
-            }
+        //        }
+        //    }
 
 
-            //SeparationOfConnections(lines);
+        //    //SeparationOfConnections(lines);
 
-        }
+        //}
 
         //read & get & save list of nodes ... split based off comma
         //read & get & save the beginning and end of maze ... split based off comma
@@ -82,7 +83,16 @@ namespace MazeSolver
             for each vertex v in V 
                 do if v is marked with 0 
                 bfs(v)
-bfs(v) //visits all the unvisited vertices connected to vertex v //by a path and numbers them in the order they are visited //via global variable count count ←count +1; mark v with count and initialize a queue with v while the queue is not empty do for each vertex w in V adjacent to the front vertex do if w is marked with 0 count ←count +1; mark w with count add w to the queue remove the front vertex from the queue
+            bsf(v)
+            //visits all the unvisited vertices connected to vertex v 
+            //by a path and numbers them in the order they are visited 
+            //via global variable count count ←count +1;
+            mark v with count and initialize a queue with v
+            while the queue is not empty 
+                do for each vertex w in V adjacent to the front vertex 
+                    do if w is marked with 0 
+                    count ←count +1; 
+                mark w with count add w to the queue remove the front vertex from the queue
             */
 
             return null;
@@ -102,10 +112,10 @@ bfs(v) //visits all the unvisited vertices connected to vertex v //by a path and
             for (var i = 2; i < lines.Length; i++)
             {
                 //take a first letter because its the key, save the other letters
-                string [] connections = lines[i].Split(',');
+                string[] connections = lines[i].Split(',');
 
                 var letterToRemove = connections[0];
-                
+
                 Console.WriteLine("\nKEY[letter removed]: " + letterToRemove);
 
                 connections = connections.Where(val => val != letterToRemove).ToArray();
@@ -115,12 +125,10 @@ bfs(v) //visits all the unvisited vertices connected to vertex v //by a path and
                     Console.WriteLine("connection: " + connectedTo);
                 }
 
-               keepTrack.Add(keys[i-2], connections);
-                
+                keepTrack.Add(keys[i - 2], connections);
+
             }
             //add those letters to their matching key
-
-           // PrintKeepTrack(keepTrack);
 
             return keepTrack;
         }
@@ -133,5 +141,34 @@ bfs(v) //visits all the unvisited vertices connected to vertex v //by a path and
         //        Console.WriteLine("Key: " + pair.Key + " Values:" + pair.Value);
         //    }
         //}
+
+        protected class Node<T> where T : IComparable<T>
+        {
+
+            private readonly T _data;
+            public int Visited { get; set; }
+
+            public Node(T data)
+            {
+                this._data = data;
+               
+            }
+
+            public T Data
+            {
+                get
+                {
+                    return _data;
+                }
+
+                set
+                {
+                    value = _data;
+                }
+
+            }
+
+        }
+
     }
 }
