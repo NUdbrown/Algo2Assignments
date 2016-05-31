@@ -45,6 +45,8 @@
     <Compile Include="BST\BinarySearchTree.cs" />
     <Compile Include="LinkedLists\DoubleLinkedList.cs" />
     <Compile Include="LinkedLists\SingleLinkedList.cs" />
+    <Compile Include="PriorityQueue\MaxHeapPriorityQueue.cs" />
+    <Compile Include="PriorityQueue\PQNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
