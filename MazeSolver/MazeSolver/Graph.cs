@@ -8,7 +8,6 @@ namespace MazeSolver
 {
     public class Graph
     {
-
         public Node<string>[] GettingTheKeys(string[] lines)
         {
             Node<string>[] keys = new Node<string>[lines[0].Split(',').Length];
@@ -32,37 +31,36 @@ namespace MazeSolver
             for (int i = 2; i < lines.Length; i++)
             {
                 //take a first letter because its the key, save the other letters
-                int index = 0;
                 string[] arrayElems = lines[i].Split(',').ToArray();
-                var connections = new Node<string>[arrayElems.Length];
+                var connections = new Node<string>[arrayElems.Length - 1];
 
                 for (int j = 1; j < arrayElems.Length; j++)
                 {
                     Node<string> fillPosition = new Node<string>(arrayElems[j]);
-                    connections[index] = fillPosition;
-                    index++;
-                }
-
-
-                foreach (var connectedTo in connections)
-                {
-                    Console.WriteLine("connection: " + connectedTo);
+                    connections[j - 1] = fillPosition;
                 }
 
                 keepTrack.Add(GettingTheKeys(lines)[i - 2], connections);
 
             }
             //add those letters to their matching key
-            PrintKeepTrack(keepTrack);
+            //PrintKeepTrack(keepTrack);
             return keepTrack;
         }
 
         public void PrintKeepTrack(Dictionary<Node<string>, Node<string>[]> keyPair)
         {
+            int count = 0;
             foreach (var pair in keyPair)
             {
-                Console.WriteLine("Key: " + pair.Key + " Values:" + pair.Value);
+                Console.WriteLine("Key: " + pair.Key.Data);
+                foreach (Node<string> value in pair.Value)
+                {
+                    Console.WriteLine("Values:" + value.Data);
+                }
             }
+            count++;
+            Console.WriteLine("this happened this many times: " + count);
         }
 
 
