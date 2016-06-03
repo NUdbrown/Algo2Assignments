@@ -14,6 +14,7 @@ namespace MazeSolver
     public class MazeSolver
     {
         private readonly Graph<string> _graph = new Graph<string>();
+        private List<List<Graph<string>.Node<string>>> collection = new List<List<Graph<string>.Node<string>>>();
 
         public static void Main(string[] args)
         {
@@ -49,7 +50,7 @@ namespace MazeSolver
                         _graph.SetConnections(lines);
                         // PrintTheDictionary();
                         mazeNumber++;
-                        PrintOut(mazeNumber, SolveMaze(lines));
+                        Console.WriteLine(PrintOut(mazeNumber, SolveMaze(lines)));
                         Console.WriteLine();
                         list.Clear();
                         if (streamReader.EndOfStream)
@@ -84,27 +85,23 @@ namespace MazeSolver
             //int count = 0;
             var endNode = _graph.Dictionary[lines[1].Split(',')[1]];
             current = _graph.Dictionary[lines[1].Split(',')[0]];
-            current.Visited = true;
             path.Add(current);
 
             foreach (var connectedNode in current.ConnectedNodes)
             {
-                if (connectedNode.Visited == false)
-                {
                     path.Add(connectedNode);
-                    paths.Add(RecursiveMethod(path, endNode));
-                }
+                    paths.Add(RecursiveMethod(path, endNode));  
             }
 
-            if (paths.Count == 0)
+            if (paths.ElementAt(0) == null)
             {
                 return null;
             }
             else
             {
-                //int min = paths.Select(m => m.Count).Min();
+                int min = paths.Select(m => m.Count).Min();
 
-                List<Graph<string>.Node<string>> theRightPath = paths.FirstOrDefault();
+                List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
 
                 return theRightPath;
             }
@@ -117,32 +114,41 @@ namespace MazeSolver
             {
                 foreach (var current in path.ElementAt(path.Count - 1).ConnectedNodes)
                 {
-                    if (current.Visited == false)
+                    if (!path.Contains(current))
                     {
-                        current.Visited = true;
-                        if (current.ConnectedNodes.Contains(_graph.Dictionary[endNode.Data]))
+                        if (current != endNode)
+                        {
+                            if (current.ConnectedNodes.Contains(endNode))
+                            {
+                                path.Add(current);
+                                //Make a copy of the list for the next recursive call
+                                var newlist = path.ToList();
+                                //Save the path returned from the recursion
+                                var childpath = RecursiveMethod(newlist, endNode);
+                                //If childPath is not null, save it to the collection of paths (which you still need)
+                                //Find the shortest path and return it.
+                                if (childpath != null)
+                                {
+                                    collection.Add(childpath);
+                                    if (collection.Count > 0)
+                                    {
+                                        int min = collection.Select(m => m.Count).Min();
+                                        return collection.FirstOrDefault(p => p.Count == min);
+                                    }
+                                }
+
+                            }    
+                        }
+                        else
                         {
                             path.Add(current);
-                            if (current == endNode)
-                            {
-                                path.Add(endNode);
-                                return path;
-                            }
-                            else
-                            {
-                                RecursiveMethod(path, endNode);
-                            }
+                            return path;
                         }
                     }
+
                 }
 
             }
-            //else if (path.ElementAt(path.Count - 1) == _graph.Dictionary[endNode.Data])
-            //{
-            //    path.Add(endNode);
-            //    return path;
-            //}
-
             return null;
         }
 
