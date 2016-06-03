@@ -48,10 +48,9 @@ namespace MazeSolver
                         var lines = list.ToArray();
                         _graph.DictionaryCreation(lines);
                         _graph.SetConnections(lines);
-                        // PrintTheDictionary();
+                        //PrintTheDictionary();
                         mazeNumber++;
-                        Console.WriteLine(PrintOut(mazeNumber, SolveMaze(lines)));
-                        Console.WriteLine();
+                        Console.WriteLine(PrintOut(mazeNumber, SolveMaze(lines)) + "\n");
                         list.Clear();
                         if (streamReader.EndOfStream)
                         {
@@ -87,24 +86,32 @@ namespace MazeSolver
             current = _graph.Dictionary[lines[1].Split(',')[0]];
             path.Add(current);
 
-            foreach (var connectedNode in current.ConnectedNodes)
-            {
-                    path.Add(connectedNode);
-                    paths.Add(RecursiveMethod(path, endNode));  
-            }
+            var minPath = RecursiveMethod(path, endNode);
 
-            if (paths.ElementAt(0) == null)
-            {
-                return null;
-            }
-            else
-            {
-                int min = paths.Select(m => m.Count).Min();
+            return minPath;
 
-                List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
+            //foreach (var connectedNode in current.ConnectedNodes)
+            //{
+            //    path.Add(connectedNode);
+            //    var thisPath = RecursiveMethod(path, endNode);
+            //    if (thisPath != null)
+            //    {
+            //        paths.Add(thisPath);
+            //    }
+            //}
 
-                return theRightPath;
-            }
+            //if (paths.Count == 0)
+            //{
+            //    return null;
+            //}
+            //else
+            //{
+            //    int min = paths.Select(m => m.Count).Min();
+
+            //    List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
+
+            //    return theRightPath;
+            //}
 
         }
 
@@ -112,62 +119,52 @@ namespace MazeSolver
         {
             if (path.ElementAt(path.Count - 1) != endNode)
             {
+                List<List<Graph<string>.Node<string>>> paths = new List<List<Graph<string>.Node<string>>>();
                 foreach (var current in path.ElementAt(path.Count - 1).ConnectedNodes)
                 {
                     if (!path.Contains(current))
                     {
-                        if (current != endNode)
+                        var childPath = path.ToList();
+                        childPath.Add(current);
+                        childPath = RecursiveMethod(childPath, endNode);
+                        if (childPath != null)
                         {
-                            if (current.ConnectedNodes.Contains(endNode))
-                            {
-                                path.Add(current);
-                                //Make a copy of the list for the next recursive call
-                                var newlist = path.ToList();
-                                //Save the path returned from the recursion
-                                var childpath = RecursiveMethod(newlist, endNode);
-                                //If childPath is not null, save it to the collection of paths (which you still need)
-                                //Find the shortest path and return it.
-                                if (childpath != null)
-                                {
-                                    collection.Add(childpath);
-                                    if (collection.Count > 0)
-                                    {
-                                        int min = collection.Select(m => m.Count).Min();
-                                        return collection.FirstOrDefault(p => p.Count == min);
-                                    }
-                                }
-
-                            }    
-                        }
-                        else
-                        {
-                            path.Add(current);
-                            return path;
+                            paths.Add(childPath);
                         }
                     }
-
                 }
 
+                if (paths.Count > 0)
+                {
+                    int min = paths.Select(m => m.Count).Min();
+                    path = paths.FirstOrDefault(p => p.Count == min);
+                }
+                else
+                {
+                    path = null;
+                }
             }
-            return null;
+
+    
+            return path;
         }
 
         private string PrintOut(int mazeNum, List<Graph<string>.Node<string>> theRightPath)
-        {
-            string outputs = null;
-            string printThis = "Maze " + mazeNum + " Solution: ";
-            if (theRightPath != null)
-            {
-                outputs = theRightPath.Aggregate<Graph<string>.Node<string>, string>(null,
-                    (current, node) => current + node.Data);
+{
+    string outputs = null;
+    string printThis = "Maze " + mazeNum + " Solution: ";
+    if (theRightPath != null)
+    {
+        outputs = theRightPath.Aggregate<Graph<string>.Node<string>, string>(null,
+            (current, node) => current + node.Data);
 
-            }
-            else
-            {
-                outputs = "No Solution";
-            }
-            return printThis + outputs;
-        }
+    }
+    else
+    {
+        outputs = "No Solution";
+    }
+    return printThis + outputs;
+}
 
 
     }
