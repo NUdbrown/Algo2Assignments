@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace MazeSolver
 {
     public class MazeSolver
     {
-        private readonly Graph _graph = new Graph();
+        private readonly Graph<string> _graph = new Graph<string>();
 
         public static void Main(string[] args)
         {
@@ -43,10 +44,12 @@ namespace MazeSolver
                     else
                     {
                         var lines = list.ToArray();
-                        //_graph.DictionarySetUp(lines);
+                        _graph.DictionaryCreation(lines);
+                        _graph.SetConnections(lines);
+                       // PrintTheDictionary();
                         mazeNumber++;
-                        List<Graph.Node<string>> resultList = SolveMaze(_graph.DictionarySetUp(lines), lines);
-                        Console.WriteLine(PrintOut(mazeNumber, resultList));                     
+                        PrintOut(mazeNumber, SolveMaze(lines));
+                        Console.WriteLine();              
                         list.Clear();
                         if (streamReader.EndOfStream)
                         {
@@ -57,68 +60,65 @@ namespace MazeSolver
             }
         }
 
-
-        public List<Graph.Node<string>> SolveMaze(Dictionary<Graph.Node<string>, Graph.Node<string>[]> nodesAndConnections, string [] lines)
+        public void PrintTheDictionary()
         {
-            //figure out how to save the path
-            
-            Graph.Node<string> current = null;
-            int count = 0;
-            Queue<Graph.Node<string>> theQueue = new Queue<Graph.Node<string>>();
-            var paths = new List<List<Graph.Node<string>>>();
-
-            current = nodesAndConnections.Keys.FirstOrDefault(k => k.Data == lines[1].Split(',')[0]);              
-            current.Visited = (++ count);
-            theQueue.Enqueue(current);
-
-            while(theQueue.Count > 0)
+            foreach (var value in _graph.Dictionary.Values)
             {
-                var path = new List<Graph.Node<string>>();
-
-                if (!path.Contains(current))
+                 Console.WriteLine("Value: " + value.Data);
+                foreach (var connections in value.ConnectedNodes)
                 {
-                    path.Add(current);
+                    Console.WriteLine("Connection: " + connections.Data);
                 }
-
-                var currentInQueue = nodesAndConnections[current];
-                foreach (var element in currentInQueue)
-                {
-                    if (element.Visited == 0)
-                    {
-                        element.Visited = ++ count;
-                        theQueue.Enqueue(element);
-                        if (!path.Contains(element))
-                        {
-                            if (element.Data != lines[1].Split(',')[1])
-                            {
-                                path.Add(element);
-                            }
-                            else
-                            {
-                                path.Add(element);
-                                paths.Add(path);
-                                break;
-                            }                            
-                        }
-                    }
-                }
-                theQueue.Dequeue();
             }
+        }
+
+        public List<Graph<string>.Node<string>> SolveMaze(string[] lines)
+        {
+            //Queue<Graph<string>.Node<string>> theQueue = new Queue<Graph<string>.Node<string>>();
+            var paths = new List<List<Graph<string>.Node<string>>>();
+            var path = new List<Graph<string>.Node<string>>();
+            //figure out how to save the path
+
+            Graph<string>.Node<string> current = null;
+            //int count = 0;
+            var endNode = _graph.Dictionary[lines[1].Split(',')[1]];
+            current = _graph.Dictionary[lines[1].Split(',')[0]];
+            path.Add(current);
+
+            foreach (var connectedNode in current.ConnectedNodes)
+            {
+                paths.Add(RecursiveMethod(path, endNode));
+            }
+
 
             int min = paths.Select(m => m.Count).Min();
 
-            List<Graph.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
+            List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
 
             return theRightPath;
         }
 
-        private string PrintOut(int mazeNum, List<Graph.Node<string>> theRightPath)
+        public List<Graph<string>.Node<string>> RecursiveMethod(List<Graph<string>.Node<string>> path, Graph<string>.Node<string> endNode)
+        {
+            foreach (var current in path.ElementAt(path.Count-1).ConnectedNodes)
+            {
+                if (current.ConnectedNodes.Contains(_graph.Dictionary[endNode.Data]))
+                {
+                    path.Add(current);
+                    RecursiveMethod(path, endNode);
+                }
+            }
+
+            return path;
+        } 
+
+        private string PrintOut(int mazeNum, List<Graph<string>.Node<string>> theRightPath)
         {
             string outputs = null;
             string printThis = "Maze " + mazeNum + " Solution: ";
             if (theRightPath != null)
             {
-                outputs = theRightPath.Aggregate<Graph.Node<string>, string>(null,
+                outputs = theRightPath.Aggregate<Graph<string>.Node<string>, string>(null,
                     (current, node) => current + node.Data);
 
             }
@@ -128,7 +128,7 @@ namespace MazeSolver
             }
             return printThis + outputs;
         }
-      
-        
+
+
     }
 }

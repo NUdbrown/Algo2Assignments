@@ -1,78 +1,73 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MazeSolver
 {
-    public class Graph
+    public class Graph<T> where T : IComparable<T>
     {
-        public Node<string>[] GettingTheKeys(string[] lines)
-        {
-            Node<string>[] keys = new Node<string>[lines[0].Split(',').Length];
+        private Dictionary<string, Node<string>> _dictionary;
 
-            int index = 0;
-            foreach (var key in lines[0].Split(','))
+        public Dictionary<string, Node<string>> Dictionary
+        {
+            get
             {
-                Node<string> temp = new Node<string>(key);
-                keys[index] = temp;
-                index++;
+                return _dictionary;
             }
 
-            return keys;
-        }
-
-        //separates the connections(values to keys)
-        public Dictionary<Node<string>, Node<string>[]> DictionarySetUp(string[] lines)
-        {
-            var keepTrack = new Dictionary<Node<string>, Node<string>[]>();
-
-            for (int i = 2; i < lines.Length; i++)
+            set
             {
-                //take a first letter because its the key, save the other letters
-                string[] arrayElems = lines[i].Split(',').ToArray();
-                var connections = new Node<string>[arrayElems.Length - 1];
-
-                for (int j = 1; j < arrayElems.Length; j++)
-                {
-                    Node<string> fillPosition = new Node<string>(arrayElems[j]);
-                    connections[j - 1] = fillPosition;
-                }
-
-                keepTrack.Add(GettingTheKeys(lines)[i - 2], connections);
-
+                _dictionary = value;
             }
-            //add those letters to their matching key
-            //PrintKeepTrack(keepTrack);
-            return keepTrack;
         }
 
-        public void PrintKeepTrack(Dictionary<Node<string>, Node<string>[]> keyPair)
+        //create a dictionary, use lines in txt file to connect the nodes from the array to each other
+        public Dictionary<string, Node<string>> DictionaryCreation(string [] lines)
         {
-            int count = 0;
-            foreach (var pair in keyPair)
+           _dictionary = new Dictionary<string, Node<string>> ();
+            
+            foreach (var value in lines[0].Split(','))
             {
-                Console.WriteLine("Key: " + pair.Key.Data);
-                foreach (Node<string> value in pair.Value)
+                Node<string> temp = new Node<string>(value);
+                _dictionary.Add(value, temp);
+            }
+            return _dictionary;
+        }
+
+        public void SetConnections(string [] lines)
+        {
+            _dictionary = DictionaryCreation(lines);
+            foreach (var value in _dictionary.Values)
+            {
+                for (int i = 2; i < lines.Length; i++)
                 {
-                    Console.WriteLine("Values:" + value.Data);
+                    if (lines[i].Split(',')[0].CompareTo(value.Data) == 0)
+                    {
+                        foreach (var conection in lines[i].Split(','))
+                        {
+                            value.ConnectedNodes.Add(_dictionary[conection]);
+                            value.ConnectedNodes.Remove(value);
+                        }                        
+                    }
                 }
             }
-            count++;
-            Console.WriteLine("this happened this many times: " + count);
-        }
 
+        }     
 
         public class Node<T> where T : IComparable<T>
         {
 
             private readonly T _data;
-            public int Visited { get; set; }
+            public bool Visited { get; set; }
+            public List<Node<T>> ConnectedNodes { get; set; }
 
             public Node(T data)
             {
                 this._data = data;
+                ConnectedNodes = new List<Node<T>>();
 
             }
 
