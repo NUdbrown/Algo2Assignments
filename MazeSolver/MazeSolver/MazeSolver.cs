@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -46,10 +47,10 @@ namespace MazeSolver
                         var lines = list.ToArray();
                         _graph.DictionaryCreation(lines);
                         _graph.SetConnections(lines);
-                       // PrintTheDictionary();
+                        // PrintTheDictionary();
                         mazeNumber++;
                         PrintOut(mazeNumber, SolveMaze(lines));
-                        Console.WriteLine();              
+                        Console.WriteLine();
                         list.Clear();
                         if (streamReader.EndOfStream)
                         {
@@ -64,7 +65,7 @@ namespace MazeSolver
         {
             foreach (var value in _graph.Dictionary.Values)
             {
-                 Console.WriteLine("Value: " + value.Data);
+                Console.WriteLine("Value: " + value.Data);
                 foreach (var connections in value.ConnectedNodes)
                 {
                     Console.WriteLine("Connection: " + connections.Data);
@@ -83,34 +84,67 @@ namespace MazeSolver
             //int count = 0;
             var endNode = _graph.Dictionary[lines[1].Split(',')[1]];
             current = _graph.Dictionary[lines[1].Split(',')[0]];
+            current.Visited = true;
             path.Add(current);
 
             foreach (var connectedNode in current.ConnectedNodes)
             {
-                paths.Add(RecursiveMethod(path, endNode));
+                if (connectedNode.Visited == false)
+                {
+                    path.Add(connectedNode);
+                    paths.Add(RecursiveMethod(path, endNode));
+                }
             }
 
+            if (paths.Count == 0)
+            {
+                return null;
+            }
+            else
+            {
+                //int min = paths.Select(m => m.Count).Min();
 
-            int min = paths.Select(m => m.Count).Min();
+                List<Graph<string>.Node<string>> theRightPath = paths.FirstOrDefault();
 
-            List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
+                return theRightPath;
+            }
 
-            return theRightPath;
         }
 
         public List<Graph<string>.Node<string>> RecursiveMethod(List<Graph<string>.Node<string>> path, Graph<string>.Node<string> endNode)
         {
-            foreach (var current in path.ElementAt(path.Count-1).ConnectedNodes)
+            if (path.ElementAt(path.Count - 1) != endNode)
             {
-                if (current.ConnectedNodes.Contains(_graph.Dictionary[endNode.Data]))
+                foreach (var current in path.ElementAt(path.Count - 1).ConnectedNodes)
                 {
-                    path.Add(current);
-                    RecursiveMethod(path, endNode);
+                    if (current.Visited == false)
+                    {
+                        current.Visited = true;
+                        if (current.ConnectedNodes.Contains(_graph.Dictionary[endNode.Data]))
+                        {
+                            path.Add(current);
+                            if (current == endNode)
+                            {
+                                path.Add(endNode);
+                                return path;
+                            }
+                            else
+                            {
+                                RecursiveMethod(path, endNode);
+                            }
+                        }
+                    }
                 }
-            }
 
-            return path;
-        } 
+            }
+            //else if (path.ElementAt(path.Count - 1) == _graph.Dictionary[endNode.Data])
+            //{
+            //    path.Add(endNode);
+            //    return path;
+            //}
+
+            return null;
+        }
 
         private string PrintOut(int mazeNum, List<Graph<string>.Node<string>> theRightPath)
         {
