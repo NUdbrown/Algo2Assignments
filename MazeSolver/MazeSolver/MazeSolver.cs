@@ -90,29 +90,6 @@ namespace MazeSolver
 
             return minPath;
 
-            //foreach (var connectedNode in current.ConnectedNodes)
-            //{
-            //    path.Add(connectedNode);
-            //    var thisPath = RecursiveMethod(path, endNode);
-            //    if (thisPath != null)
-            //    {
-            //        paths.Add(thisPath);
-            //    }
-            //}
-
-            //if (paths.Count == 0)
-            //{
-            //    return null;
-            //}
-            //else
-            //{
-            //    int min = paths.Select(m => m.Count).Min();
-
-            //    List<Graph<string>.Node<string>> theRightPath = paths.Where(p => p.Count == min).FirstOrDefault();
-
-            //    return theRightPath;
-            //}
-
         }
 
         public List<Graph<string>.Node<string>> RecursiveMethod(List<Graph<string>.Node<string>> path, Graph<string>.Node<string> endNode)

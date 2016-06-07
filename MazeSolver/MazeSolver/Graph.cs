@@ -61,7 +61,6 @@ namespace MazeSolver
         {
 
             private readonly T _data;
-            public bool Visited { get; set; }
             public List<Node<T>> ConnectedNodes { get; set; }
 
             public Node(T data)
