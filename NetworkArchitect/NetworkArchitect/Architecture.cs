@@ -37,12 +37,6 @@ namespace NetworkArchitect
                     value.ConnectedSockets.Add(new Edge(Dictionary[splitInfo[0]], distance));
                 }
 
-                //Console.WriteLine("Socket: " + value.SocketId);
-                //foreach (var connect in value.ConnectedSockets)
-                //{
-                //    Console.WriteLine("connected to: " + connect.Socket.SocketId + ":" + connect.Distance);
-                //}
-                //Console.WriteLine();
             }
 
         }

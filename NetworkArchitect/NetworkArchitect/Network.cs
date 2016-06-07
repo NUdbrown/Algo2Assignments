@@ -61,30 +61,23 @@ namespace NetworkArchitect
             //list of MSTs
             List<List<MSTEdge>> collectionOfMSTs = new List<List<MSTEdge>>();
 
-            while (nodes.Values.Where(v => v.Visited != true).Count() > 0)
+            while (nodes.Values.Where(v => !v.Visited).Count() > 0)
             {
                 //create new mst
                 List<MSTEdge> mst = new List<MSTEdge>();
 
                 //start at first unvisited node
-                var current = nodes.Values.First(v => v.Visited != true);
+                var current = nodes.Values.First(v => !v.Visited);
 
                 do
                 {
                     current.Visited = true;
 
                     //purge mstEdges that have already been visited
-                    for (int i = 0; i < candidateEdges.Count; i++)
-                    {
-                        if (candidateEdges[i].ConnectedEdge.Socket.Visited == true)
-                        {
-                            candidateEdges.Remove(candidateEdges[i]);
-                        }
-                    }
-
+                    candidateEdges.RemoveAll(c => c.ConnectedEdge.Socket.Visited);
                     //Load its "unvisited" edges into the edges collection
                     candidateEdges.AddRange(from edge in current.ConnectedSockets
-                                            where edge.Socket.Visited != true
+                                            where !edge.Socket.Visited
                                             select new MSTEdge(current, edge));
 
                     if (candidateEdges.Count > 0)
@@ -118,6 +111,7 @@ namespace NetworkArchitect
             {
                 Console.WriteLine("___MST " + i + "___");
                 var mst = listOfMSTs[i];
+                mstCableTotal = 0;
                 for (int j = 0; j < mst.Count; j++)
                 {
                     Console.WriteLine(mst[j].StartingEdgeNode.SocketId + ":" + mst[j].ConnectedEdge.Socket.SocketId);
